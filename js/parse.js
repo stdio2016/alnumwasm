@@ -140,17 +140,17 @@ function parseExpr(tok, locals) {
   var name, type;
   var brtargets = {};
 
-  while (depth > 0 || t !== "END") {
+  while ((depth > 0 || t !== "END") && t !== "") {
     var decoded = OpCodes[t];
     if (!decoded) {
       throw SyntaxError("unknown instruction "+t+" at line "+tok.lineno);
     }
+    code.push(decoded[1]);
     switch (decoded[0]) {
       case 0: // simple instruction
-        code.push(decoded[1]); break;
+        break;
       case 1: // block, loop, if
         depth++;
-        code.push(decoded[1]);
         name = parseLbl(tok, "LBL");
         if (brtargets[name]) throw ReferenceError("redeclaration of label "+name+" at line "+tok.lineno);
         brtargets[name] = depth;
@@ -159,7 +159,6 @@ function parseExpr(tok, locals) {
         else throw ReferenceError("unknown block type "+type+" at line "+tok.lineno);
         break;
       case 2: // end
-        code.push(decoded[1]);
         depth--;
         break;
       default:
