@@ -1,21 +1,27 @@
 "use strict";
 
 const OpCodes = {
-  UNREACHABLE: [0x0,0],
-  NOP: [0x1,0],
-  BLOCK: [0x2,1], // block lbl type ... end
-  LOOP: [0x3,1],
-  IF: [0x4,1],
-  ELSE: [0x5,0],
-  END: [0xb,2], // end
-  BR: [0xc,3], // br label
-  BRIF: [0xd,3],
-  BRTABLE: [0xe,4], // brtable label and ...
-  RETURN: [0xf,0], // return
-  CALL: [0x10,5], // call funname
-  CALLINDIRECT: [0x11,6], CALLIND: [0x11,6], // callindirect typename
-  DROP: [0x1a,0], POP: [0x1a,0],
-  SELECT: [0x1b,0],
+  UNREACHABLE: [0,0x0],
+  NOP: [0,0x1],
+  BLOCK: [1,0x2], // block lbl type ... end
+  LOOP: [1,0x3],
+  IF: [1,0x4],
+  ELSE: [0,0x5],
+  END: [2,0xb], // end
+  BR: [3,0xc], // br label
+  BRIF: [3,0xd],
+  BRTABLE: [4,0xe], // brtable label and ...
+  RETURN: [0,0xf], // return
+  CALL: [5,0x10], // call funname
+  CALLINDIRECT: [6,0x11], CALLIND: [6,0x11], // callindirect typename
+  DROP: [0,0x1a],
+  SELECT: [0,0x1b],
+};
+
+const BlockTypes = {
+  "": 0x40,
+  I32: 0x7f, I64: 0x7e, F32: 0x7d, F64: 0x7c,
+  I: 0x7f, L: 0x7e, F: 0x7d, D: 0x7c
 };
 
 function nextTokenNoRem(tokenizer) {
@@ -36,6 +42,10 @@ function nextTokenNoRem(tokenizer) {
 }
 
 function nextToken(tokenizer) {
+  if (tokenizer.reverted) {
+    tokenizer.reverted = false;
+    return tokenizer.now;
+  }
   var t = nextTokenNoRem(tokenizer), depth = 0;
   while (t.toUpperCase() === "REM") {
     depth = 1;
@@ -47,11 +57,16 @@ function nextToken(tokenizer) {
     } while (depth > 0 && t !== "") ;
     t = nextTokenNoRem(tokenizer);
   }
+  tokenizer.now = t;
   return t;
 }
 
+function nextUpperCaseToken(tok) {
+  return nextToken(tok).toUpperCase();
+}
+
 function parseMy(str) {
-  var tok = {str: str, pos: 0, lineno: 0};
+  var tok = {str: str, pos: 0, lineno: 0, reverted: false, now: ""};
   var funs = [];
   while (tok.pos < tok.str.length) {
     var t = nextToken(tok).toUpperCase();
@@ -81,7 +96,7 @@ function parseParams(tok) {
 function parseFun(tok) {
   var name = nextToken(tok);
   var t = nextToken(tok).toUpperCase();
-  var param = [], ret = "NONE", type = "", local = [];
+  var param = [], ret = "", type = "", local = [];
   if (t === "TYPE") {
     type = nextToken(tok);
     t = nextToken(tok).toUpperCase();
@@ -99,7 +114,7 @@ function parseFun(tok) {
   if (t !== "CODE") {
     throw SyntaxError("function without code at line "+tok.lineno);
   }
-  var code = parseExpr(tok, "");
+  var code = parseExpr(tok);
   return {
     name: name,
     type: type,
@@ -110,19 +125,47 @@ function parseFun(tok) {
   };
 }
 
-function parseExpr(tok, begin) {
-  var t = nextToken(tok);
-  var tt = t.toUpperCase();
-  var code = [begin];
-  while (t !== "" && tt !== "END") {
-    switch (tt) {
-      case "BLOCK": case "LOOP": case "IF":
-        code.push(parseExpr(tok, tt)); break;
-      default:
-        code.push(t);
+function parseLbl(tok, name) {
+  if (nextUpperCaseToken(tok) === name) {
+    return nextToken(tok);
+  }
+  tok.reverted = true;
+  return "";
+}
+
+function parseExpr(tok, locals) {
+  var t = nextUpperCaseToken(tok);
+  var code = [];
+  var depth = 0;
+  var name, type;
+  var brtargets = {};
+
+  while (depth > 0 || t !== "END") {
+    var decoded = OpCodes[t];
+    if (!decoded) {
+      throw SyntaxError("unknown instruction "+t+" at line "+tok.lineno);
     }
-    t = nextToken(tok);
-    tt = t.toUpperCase();
+    switch (decoded[0]) {
+      case 0: // simple instruction
+        code.push(decoded[1]); break;
+      case 1: // block, loop, if
+        depth++;
+        code.push(decoded[1]);
+        name = parseLbl(tok, "LBL");
+        if (brtargets[name]) throw ReferenceError("redeclaration of label "+name+" at line "+tok.lineno);
+        brtargets[name] = depth;
+        type = parseLbl(tok, "AS").toUpperCase();
+        if (type in BlockTypes) code.push(BlockTypes[type]);
+        else throw ReferenceError("unknown block type "+type+" at line "+tok.lineno);
+        break;
+      case 2: // end
+        code.push(decoded[1]);
+        depth--;
+        break;
+      default:
+        throw Error("unimplemented instruction type " + decoded[0]);
+    }
+    t = nextUpperCaseToken(tok);
   }
   if (t === "") throw SyntaxError("missing end of block at line "+tok.lineno);
   return code;
@@ -137,11 +180,10 @@ code
   rem
     if a < b then 1 else a
   endrem
-  getlocal a getlocal b i32lt
-  if
-    i32const 1
+  if lbl rr as i32
+    drop
   else
-    getlocal a
+    drop
   end
 end
 `));
