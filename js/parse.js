@@ -59,7 +59,12 @@ AlnumWasmParser.prototype.parseExpr = function () {
     }
     else if (op === OpCodes.CALL) {
       var name = this.lexer.next();
-      this.code.push(["func", name]);
+      if (/^\d+$/.test(name)) {
+        AlnumWasmParser.writeUint(parseInt(name), this.code);
+      }
+      else {
+        this.code.push(["func", name]);
+      }
     }
     else if (op === OpCodes.CALLINDIRECT) {
       
@@ -97,6 +102,35 @@ AlnumWasmParser.prototype.parseExpr = function () {
     else if (op === OpCodes.F32CONST || op === OpCodes.F64CONST) {
       this.parseFloat(op - OpCodes.F32CONST);
     }
+  }
+};
+
+AlnumWasmParser.prototype.parseBlockOp = function () {
+  var tok = this.lexer.next();
+  if (tok === "LBL") {
+    tok = this.lexer.next();
+    if (!tok) throw SyntaxError("missing label name");
+    if (/^\d+$/.test(tok)) throw SyntaxError("label name cannot be all digits");
+    this.scope.push([tok, this.labelNames[tok]]);
+    this.labelNames[tok] = this.scope.length;
+  }
+  else {
+    this.scope.push(["", void 0]);
+    this.lexer.backtrack();
+  }
+  tok = this.lexer.next();
+  if (tok === "AS") {
+    tok = this.lexer.next();
+    if (!tok) throw SyntaxError("missing type name");
+    var type = BlockTypes[tok];
+    if (type === void 0) {
+      throw SyntaxError("unknown type " + type);
+    }
+    this.code.push(type);
+  }
+  else {
+    this.lexer.backtrack();
+    this.code.push(0x40);
   }
 };
 

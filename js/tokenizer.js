@@ -7,6 +7,7 @@ function Tokenizer(str) {
   this.lineStart = 0;
   this.prevLineStart = 0;
   this.type = 0;
+  this.rewinded = false;
 }
 
 Tokenizer.prototype.getChar = function getChar() {
@@ -101,6 +102,10 @@ Tokenizer.prototype.readQuoted = function readQuoted(endChar) {
 };
 
 Tokenizer.prototype.next = function () {
+  if (this.rewinded) {
+    this.rewinded = false;
+    return this.token;
+  }
   var t = this.readWord();
   while (this.type === Tokenizer.COMMENT) {
     t = this.readWord();
@@ -108,4 +113,8 @@ Tokenizer.prototype.next = function () {
   this.word = t;
   this.token = t.toUpperCase();
   return this.token;
+};
+
+Tokenizer.prototype.backtrack = function () {
+  this.rewinded = true;
 };
