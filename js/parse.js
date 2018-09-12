@@ -1,6 +1,6 @@
 "use strict";
 
-const OpCodes = {
+const OpCodes2 = {
   UNREACHABLE: [0,0x0],
   NOP: [0,0x1],
   BLOCK: [1,0x2], // block lbl type ... end
