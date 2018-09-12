@@ -1,6 +1,7 @@
 function Tokenizer(str) {
   this.str = str;
   this.pos = 0;
+  this.word = "";
   this.token = "";
   this.lineno = 1;
   this.lineStart = 0;
@@ -104,11 +105,7 @@ Tokenizer.prototype.next = function () {
   while (this.type === Tokenizer.COMMENT) {
     t = this.readWord();
   }
-  if (this.type === Tokenizer.WORD_TOKEN) {
-    this.token = t.toUpperCase();
-  }
-  else {
-    this.token = "";
-  }
-  return t;
+  this.word = t;
+  this.token = t.toUpperCase();
+  return this.token;
 };

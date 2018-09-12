@@ -53,6 +53,10 @@ const OpCodes = {
   I64STORE16: 0x3D, LSTORES: 0x3D,
   I64STORE32: 0x3E, LSTOREI: 0x3E,
 
+// might add memory argument
+  CURRENTMEMORY: 0x3F,
+  GROWMEMORY: 0x40,
+
 // constant
   I32CONST: 0x41, ICONST: 0x41,
   I64CONST: 0x42, LCONST: 0x42,
@@ -66,8 +70,6 @@ const OpCodes = {
   RETURN: 0xF,
   DROP: 0x1A,
   SELECT: 0x1B,
-  CURRENTMEMORY: 0x3F,
-  GROWMEMORY: 0x40,
 
 // arithmetic and comparison ops at bottom
 

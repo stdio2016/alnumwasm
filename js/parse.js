@@ -1,81 +1,104 @@
 "use strict";
 
-const OpCodes2 = {
-  UNREACHABLE: [0,0x0],
-  NOP: [0,0x1],
-  BLOCK: [1,0x2], // block lbl type ... end
-  LOOP: [1,0x3],
-  IF: [1,0x4],
-  ELSE: [0,0x5],
-  END: [2,0xb], // end
-  BR: [3,0xc], // br label
-  BRIF: [3,0xd],
-  BRTABLE: [4,0xe], // brtable label and ...
-  RETURN: [0,0xf], // return
-  CALL: [5,0x10], // call funname
-  CALLINDIRECT: [6,0x11], CALLIND: [6,0x11], // callindirect typename
-  DROP: [0,0x1a],
-  SELECT: [0,0x1b],
-};
-
 const BlockTypes = {
   "": 0x40,
   I32: 0x7f, I64: 0x7e, F32: 0x7d, F64: 0x7c,
   I: 0x7f, L: 0x7e, F: 0x7d, D: 0x7c
 };
 
-function nextTokenNoRem(tokenizer) {
-  var i, j;
-  var str = tokenizer.str, lineno = tokenizer.lineno;
-  for (i = tokenizer.pos; i < str.length; i++) {
-    let ch = str.charAt(i);
-    if (ch === "\n") ++lineno;
-    if (/^\S/.test(ch)) break;
-  }
-  for (j = i + 1; j < str.length; j++) {
-    let ch = str.charAt(j);
-    if (/^\s/.test(ch)) break;
-  }
-  tokenizer.lineno = lineno;
-  tokenizer.pos = j;
-  return str.substring(i, j);
+function AlnumWasmParser(str) {
+  this.scope = [];
+  this.labelNames = {};
+  this.locals = {};
+  this.lexer = new Tokenizer(str);
+  this.code = [];
 }
 
-function nextToken(tokenizer) {
-  if (tokenizer.reverted) {
-    tokenizer.reverted = false;
-    return tokenizer.now;
+AlnumWasmParser.writeInt = function (n, code) {
+  while (n >= 64 || n < -64) {
+    code.push(n & 0x7F | 0x80);
+    n >>= 7;
   }
-  var t = nextTokenNoRem(tokenizer), depth = 0;
-  while (t.toUpperCase() === "REM") {
-    depth = 1;
-    do {
-      t = nextTokenNoRem(tokenizer);
-      let tt = t.toUpperCase();
-      if (tt === "REM") ++depth;
-      else if (tt === "ENDREM") --depth;
-    } while (depth > 0 && t !== "") ;
-    t = nextTokenNoRem(tokenizer);
+  code.push(n & 0x7F);
+};
+
+AlnumWasmParser.writeUint = function (n, code) {
+  while (n >= 128) {
+    code.push(n & 0x7F | 0x80);
+    n >>= 7;
   }
-  tokenizer.now = t;
-  return t;
-}
+  code.push(n);
+};
 
-function nextUpperCaseToken(tok) {
-  return nextToken(tok).toUpperCase();
-}
-
-function parseMy(str) {
-  var tok = {str: str, pos: 0, lineno: 0, reverted: false, now: ""};
-  var funs = [];
-  while (tok.pos < tok.str.length) {
-    var t = nextToken(tok).toUpperCase();
-    if (t === "FUN") {
-      funs.push(parseFun(tok));
+AlnumWasmParser.prototype.parseExpr = function () {
+  this.scope = [];
+  this.labelNames = {};
+  while (1) {
+    var tok = this.lexer.next();
+    if (tok === "") {
+      throw SyntaxError("missing end of block");
+    }
+    var op = OpCodes[tok];
+    this.code.push(op);
+    if (op === void 0) {
+      throw SyntaxError("unknown instruction: " + tok);
+    }
+    else if (op === OpCodes.BLOCK || op === OpCodes.LOOP || op === OpCodes.IF) {
+      this.parseBlockOp();
+    }
+    else if (op === OpCodes.END) {
+      if (this.scope.length === 0) break;
+      var lbl = this.scope.pop();
+      this.labelNames[lbl[0]] = lbl[1];
+    }
+    else if (op === OpCodes.BR || op === OpCodes.BRIF) {
+      
+    }
+    else if (op === OpCodes.BRTABLE) {
+      
+    }
+    else if (op === OpCodes.CALL) {
+      var name = this.lexer.next();
+      this.code.push(["func", name]);
+    }
+    else if (op === OpCodes.CALLINDIRECT) {
+      
+    }
+    else if (op >= OpCodes.GETLOCAL && op <= OpCodes.TEELOCAL) {
+      var vname = this.lexer.next();
+      if (/^\d+$/.test(vname)) {
+        AlnumWasmParser.writeUint(parseInt(vname), this.code);
+      }
+      else if (this.locals[vname]) {
+        AlnumWasmParser.writeUint(this.locals[vname], this.code);
+      }
+      else {
+        throw SyntaxError("variable " + vname + " is not defined");
+      }
+    }
+    else if (op >= OpCodes.GETGLOBAL && op <= OpCodes.SETGLOBAL) {
+      var vname = this.lexer.next();
+      if (/^\d+$/.test(vname)) {
+        AlnumWasmParser.writeUint(parseInt(vname), this.code);
+      }
+      else {
+        this.code.push(["global", vname]);
+      }
+    }
+    else if (op >= OpCodes.I32LOAD && op <= OpCodes.I64STORE32) {
+      
+    }
+    else if (op === OpCodes.CURRENTMEMORY || op === OpCodes.GROWMEMORY) {
+      this.code.push(0);
+    }
+    else if (op === OpCodes.I32CONST || op === OpCodes.I64CONST) {
+      this.parseInt(op - OpCodes.I32CONST);
+    }
+    else if (op === OpCodes.F32CONST || op === OpCodes.F64CONST) {
+      this.parseFloat(op - OpCodes.F32CONST);
     }
   }
-  return funs;
-}
+};
 
 function parseParams(tok) {
   var param = [];
