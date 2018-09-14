@@ -70,7 +70,7 @@ AlnumWasmParser.prototype.parseExpr = function () {
       if (/^\d+$/.test(name)) {
         lv = parseInt(name);
       }
-      else {3
+      else {
         lv = this.labelNames[name];
         if (lv === void 0) {
           throw ReferenceError("label " + name + " is not defined");
