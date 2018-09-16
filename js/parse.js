@@ -12,6 +12,7 @@ function AlnumWasmParser(str) {
   this.locals = {};
   this.lexer = new Tokenizer(str);
   this.code = [];
+  this.functions = [];
 }
 
 AlnumWasmParser.log2 = function (n, strict) {
@@ -221,112 +222,59 @@ AlnumWasmParser.prototype.parseFloat = function (isDouble) {
   }
 };
 
-function parseParams(tok) {
+AlnumWasmParser.prototype.parseFunc = function () {
+  var name = this.lexer.next();
+  if (!name) throw SyntaxError('missing function name');
+  var type = this.parseType();
+  this.code = [];
+  var t = this.lexer.next();
+  if (t === "CODE") {
+    this.parseExpr();
+  }
+  else throw SyntaxError('missing code');
+  this.functions.push([name, type, this.code]);
+};
+
+AlnumWasmParser.prototype.parseType = function () {
+  var tok = this.lexer.next();
+  if (tok === "TYPE") {
+    tok = this.lexer.next();
+    if (!tok) throw SyntaxError('missing type name');
+    return ["type", tok];
+  }
+  else {
+    this.lexer.backtrack();
+    return this.parseArgs();
+  }
+};
+
+AlnumWasmParser.prototype.parseArgs = function () {
   var param = [];
-  var t;
-  do {
-    let type = nextToken(tok), pname = "";
-    t = nextToken(tok).toUpperCase();
-    if (t.toUpperCase() === "AS") {
-      pname = type;
-      type = nextToken(tok).toUpperCase();
-      t = nextToken(tok).toUpperCase();
+  var result = [];
+  var tok = this.lexer.next();
+  if (tok === "PARAM") {
+    // TODO I am tired
+    tok = this.lexer.next();
+  }
+  if (tok === "RESULT") {
+    tok = this.lexer.next();
+    if (!tok) throw SyntaxError('missing result type');
+    var type = BlockTypes[tok];
+    if (type === void 0) {
+      throw SyntaxError("unknown type " + type);
     }
-    param.push({name: pname, type: type.toUpperCase()});
-  } while (t === "AND") ;
-  return [param, t];
-}
+    result.push(type);
+  }
+  else this.lexer.backtrack();
+  return ['param', param, result];
+};
 
-function parseFun(tok) {
-  var name = nextToken(tok);
-  var t = nextToken(tok).toUpperCase();
-  var param = [], ret = "", type = "", local = [];
-  if (t === "TYPE") {
-    type = nextToken(tok);
-    t = nextToken(tok).toUpperCase();
-  }
-  if (t === "PARAM") {
-    [param, t] = parseParams(tok);
-  }
-  if (t === "RET") {
-    ret = nextToken(tok).toUpperCase();
-    t = nextToken(tok).toUpperCase();
-  }
-  if (t === "LOCAL") {
-    [local, t] = parseParams(tok);
-  }
-  if (t !== "CODE") {
-    throw SyntaxError("function without code at line "+tok.lineno);
-  }
-  var code = parseExpr(tok);
-  return {
-    name: name,
-    type: type,
-    param: param,
-    ret: ret,
-    local: local,
-    code: code
-  };
-}
-
-function parseLbl(tok, name) {
-  if (nextUpperCaseToken(tok) === name) {
-    return nextToken(tok);
-  }
-  tok.reverted = true;
-  return "";
-}
-
-function parseExpr(tok, locals) {
-  var t = nextUpperCaseToken(tok);
-  var code = [];
-  var depth = 0;
-  var name, type;
-  var brtargets = {};
-
-  while ((depth > 0 || t !== "END") && t !== "") {
-    var decoded = OpCodes[t];
-    if (!decoded) {
-      throw SyntaxError("unknown instruction "+t+" at line "+tok.lineno);
+AlnumWasmParser.prototype.parse = function () {
+  var tok = this.lexer.next();
+  while (tok) {
+    if (tok === "FUNC") {
+      this.parseFunc();
     }
-    code.push(decoded[1]);
-    switch (decoded[0]) {
-      case 0: // simple instruction
-        break;
-      case 1: // block, loop, if
-        depth++;
-        name = parseLbl(tok, "LBL");
-        if (brtargets[name]) throw ReferenceError("redeclaration of label "+name+" at line "+tok.lineno);
-        brtargets[name] = depth;
-        type = parseLbl(tok, "AS").toUpperCase();
-        if (type in BlockTypes) code.push(BlockTypes[type]);
-        else throw ReferenceError("unknown block type "+type+" at line "+tok.lineno);
-        break;
-      case 2: // end
-        depth--;
-        break;
-      default:
-        throw Error("unimplemented instruction type " + decoded[0]);
-    }
-    t = nextUpperCaseToken(tok);
+    tok = this.lexer.next();
   }
-  if (t === "") throw SyntaxError("missing end of block at line "+tok.lineno);
-  return code;
-}
-
-console.dir(parseMy(`fun abc type 432 param a as i32 and b as i32 ret i32
-rem This is really Cool!
-endrem rem endrem
-local c as i32
-  and d as i32
-code
-  rem
-    if a < b then 1 else a
-  endrem
-  if lbl rr as i32
-    drop
-  else
-    drop
-  end
-end
-`));
+};
