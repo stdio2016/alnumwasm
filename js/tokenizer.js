@@ -14,7 +14,7 @@ Tokenizer.prototype.getChar = function getChar() {
   var ch = this.str.charAt(this.pos);
   this.pos++;
   if (ch === '\n') {
-    this.line++;
+    this.lineno++;
     this.prevLineStart = this.lineStart;
     this.lineStart = this.pos;
   }
@@ -25,7 +25,7 @@ Tokenizer.prototype.rewind = function rewind() {
   this.pos--;
   var ch = this.str.charAt(this.pos);
   if (ch === '\n') {
-    this.line--;
+    this.lineno--;
     this.lineStart = this.prevLineStart;
   }
 };

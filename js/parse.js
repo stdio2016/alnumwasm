@@ -9,7 +9,6 @@ const BlockTypes = {
 function AlnumWasmParser(str) {
   this.scope = [];
   this.labelNames = {};
-  this.locals = {};
   this.lexer = new Tokenizer(str);
   this.code = [];
   this.functions = [];
@@ -93,18 +92,17 @@ AlnumWasmParser.prototype.parseExpr = function () {
       }
     }
     else if (op === OpCodes.CALLINDIRECT) {
-      
+      var type = this.parseType();
+      this.code.push(type);
+      this.code.push(0x00);
     }
     else if (op >= OpCodes.GETLOCAL && op <= OpCodes.TEELOCAL) {
       var vname = this.lexer.next();
       if (/^\d+$/.test(vname)) {
         AlnumWasmParser.writeUint(parseInt(vname), this.code);
       }
-      else if (this.locals[vname] !== void 0) {
-        AlnumWasmParser.writeUint(this.locals[vname], this.code);
-      }
       else {
-        throw ReferenceError("variable " + vname + " is not defined");
+        this.code.push(["local", vname]);
       }
     }
     else if (op >= OpCodes.GETGLOBAL && op <= OpCodes.SETGLOBAL) {
@@ -220,21 +218,18 @@ AlnumWasmParser.prototype.parseFunc = function () {
   var name = this.lexer.next();
   if (!name) throw SyntaxError('missing function name');
   var type = this.parseType();
-  if (type[0] === "param") {
-    this.locals = {};
-    // assign a local var number
-    for (var i = 0; i < type[1].length; i++) {
-      var argname = type[1][i][0];
-      this.locals[argname] = i;
-    }
-  }
+  var locals = [];
   this.code = [];
   var t = this.lexer.next();
+  if (t === "LOCAL") {
+    locals = this.parseVarList();
+    t = this.lexer.next();
+  }
   if (t === "CODE") {
     this.parseExpr();
   }
   else throw SyntaxError('missing code');
-  this.functions.push([name, type, this.code]);
+  this.functions.push([name, type, locals, this.code]);
 };
 
 AlnumWasmParser.prototype.parseBasicType = function (what) {
@@ -258,29 +253,36 @@ AlnumWasmParser.prototype.parseType = function () {
   }
 };
 
+AlnumWasmParser.prototype.parseVarList = function () {
+  var param = [];
+  var tok;
+  do {
+    var argname = this.lexer.next();
+    if (!argname) throw SyntaxError('missing parameter');
+    tok = this.lexer.next();
+    if (tok === "AS") {
+      param.push([argname, this.parseBasicType('parameter')]);
+      tok = this.lexer.next();
+    }
+    else {
+      var type = BlockTypes[argname];
+      if (type === void 0) throw SyntaxError('unknown type ' + argname);
+      param.push([param.length + "", type]);
+    }
+  } while (tok === "AND") ;
+  this.lexer.backtrack();
+  return param;
+};
+
 AlnumWasmParser.prototype.parseArgs = function () {
   var param = [];
   var result = [];
   var tok = this.lexer.next();
   if (tok === "PARAM") {
-    do {
-      var argname = this.lexer.next();
-      if (!argname) throw SyntaxError('missing parameter');
-      tok = this.lexer.next();
-      if (tok === "AS") {
-        param.push([argname, this.parseBasicType('parameter')]);
-        tok = this.lexer.next();
-      }
-      else {
-        var type = BlockTypes[argname];
-        if (type === void 0) throw SyntaxError('unknown type ' + argname);
-        param.push([param.length + "", type]);
-      }
-    } while (tok === "AND") ;
-    this.lexer.backtrack();
+    param = this.parseVarList();
+    tok = this.lexer.next();
   }
   if (tok === "RESULT") {
-    this.lexer.next();
     result.push(this.parseBasicType('result'));
   }
   else this.lexer.backtrack();
@@ -308,6 +310,11 @@ var a = new AlnumWasmParser(
   "    ICONST 0 ILOAD ICONST 1 IADD\n" +
   "  ISTORE\n" +
   "  CALL recursiveTest\n" +
+  "END\n" +
+  "FUNC dyncall PARAM a AS F64\n" +
+  "LOCAL r AS F64\n" +
+  "CODE\n" +
+  "  GETLOCAL a ICONST 0 CALLINDIRECT TYPE drd SETLOCAL r\n" +
   "END\n"
 );
 a.parse();
