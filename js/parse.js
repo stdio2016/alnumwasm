@@ -100,7 +100,7 @@ AlnumWasmParser.prototype.parseExpr = function () {
       if (/^\d+$/.test(vname)) {
         AlnumWasmParser.writeUint(parseInt(vname), this.code);
       }
-      else if (this.locals[vname]) {
+      else if (this.locals[vname] !== void 0) {
         AlnumWasmParser.writeUint(this.locals[vname], this.code);
       }
       else {
@@ -149,13 +149,7 @@ AlnumWasmParser.prototype.parseBlockOp = function () {
   }
   tok = this.lexer.next();
   if (tok === "AS") {
-    tok = this.lexer.next();
-    if (!tok) throw SyntaxError("missing type name");
-    var type = BlockTypes[tok];
-    if (type === void 0) {
-      throw SyntaxError("unknown type " + type);
-    }
-    this.code.push(type);
+    this.code.push(this.parseBasicType('block'));
   }
   else {
     this.lexer.backtrack();
@@ -226,6 +220,14 @@ AlnumWasmParser.prototype.parseFunc = function () {
   var name = this.lexer.next();
   if (!name) throw SyntaxError('missing function name');
   var type = this.parseType();
+  if (type[0] === "param") {
+    this.locals = {};
+    // assign a local var number
+    for (var i = 0; i < type[1].length; i++) {
+      var argname = type[1][i][0];
+      this.locals[argname] = i;
+    }
+  }
   this.code = [];
   var t = this.lexer.next();
   if (t === "CODE") {
@@ -233,6 +235,14 @@ AlnumWasmParser.prototype.parseFunc = function () {
   }
   else throw SyntaxError('missing code');
   this.functions.push([name, type, this.code]);
+};
+
+AlnumWasmParser.prototype.parseBasicType = function (what) {
+  var tok = this.lexer.next();
+  if (!tok) throw SyntaxError('missing '+ what +' type');
+  var type = BlockTypes[tok];
+  if (type === void 0) throw SyntaxError('unknown type ' + tok);
+  return type;
 };
 
 AlnumWasmParser.prototype.parseType = function () {
@@ -253,17 +263,25 @@ AlnumWasmParser.prototype.parseArgs = function () {
   var result = [];
   var tok = this.lexer.next();
   if (tok === "PARAM") {
-    // TODO I am tired
-    tok = this.lexer.next();
+    do {
+      var argname = this.lexer.next();
+      if (!argname) throw SyntaxError('missing parameter');
+      tok = this.lexer.next();
+      if (tok === "AS") {
+        param.push([argname, this.parseBasicType('parameter')]);
+        tok = this.lexer.next();
+      }
+      else {
+        var type = BlockTypes[argname];
+        if (type === void 0) throw SyntaxError('unknown type ' + argname);
+        param.push([param.length + "", type]);
+      }
+    } while (tok === "AND") ;
+    this.lexer.backtrack();
   }
   if (tok === "RESULT") {
-    tok = this.lexer.next();
-    if (!tok) throw SyntaxError('missing result type');
-    var type = BlockTypes[tok];
-    if (type === void 0) {
-      throw SyntaxError("unknown type " + type);
-    }
-    result.push(type);
+    this.lexer.next();
+    result.push(this.parseBasicType('result'));
   }
   else this.lexer.backtrack();
   return ['param', param, result];
@@ -278,3 +296,19 @@ AlnumWasmParser.prototype.parse = function () {
     tok = this.lexer.next();
   }
 };
+
+var a = new AlnumWasmParser(
+  "FUNC add PARAM a AS I32 AND b AS I32 RESULT I32\n" +
+  "CODE\n" +
+  "  GETLOCAL a GETLOCAL b IADD RETURN\n" +
+  "END\n" +
+  "FUNC recursiveTest\n" +
+  "CODE\n" +
+  "    ICONST 0\n" +
+  "    ICONST 0 ILOAD ICONST 1 IADD\n" +
+  "  ISTORE\n" +
+  "  CALL recursiveTest\n" +
+  "END\n"
+);
+a.parse();
+console.log(JSON.stringify(a.functions));
