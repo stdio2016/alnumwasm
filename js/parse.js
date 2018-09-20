@@ -11,6 +11,7 @@ function AlnumWasmParser(str) {
   this.labelNames = {};
   this.lexer = new Tokenizer(str);
   this.code = [];
+  this.types = [];
   this.functions = [];
   this.tables = [];
   this.memories = [];
