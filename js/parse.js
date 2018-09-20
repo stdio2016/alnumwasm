@@ -216,16 +216,25 @@ AlnumWasmParser.prototype.parseFloat = function (isDouble) {
   }
 };
 
-AlnumWasmParser.prototype.parseFunc = function () {
+AlnumWasmParser.prototype.parseName = function (kind) {
   var name = this.lexer.next();
-  if (!name) throw SyntaxError('missing function name');
+  if (!name) throw SyntaxError('missing ' + kind);
+  return name;
+}
+
+AlnumWasmParser.prototype.parseInlineExport = function (kind, name) {
   while (this.lexer.next() === "EXPORT") {
     var expoName = this.lexer.next();
     if (!expoName) throw SyntaxError('missing export name');
     expoName = this.lexer.word;
-    this.exports.push([expoName, 'func', name]);
+    this.exports.push([expoName, kind, name]);
   }
-  this.lexer.backtrack();
+  this.lexer.backtrack();  
+};
+
+AlnumWasmParser.prototype.parseFunc = function () {
+  var name = this.parseName('function name');
+  this.parseInlineExport('func', name);
   var type = this.parseType();
   var locals = [];
   this.code = [];
@@ -252,8 +261,7 @@ AlnumWasmParser.prototype.parseBasicType = function (what) {
 AlnumWasmParser.prototype.parseType = function () {
   var tok = this.lexer.next();
   if (tok === "TYPE") {
-    tok = this.lexer.next();
-    if (!tok) throw SyntaxError('missing type name');
+    tok = this.parseName('type name');
     return ["type", tok];
   }
   else {
@@ -291,6 +299,9 @@ AlnumWasmParser.prototype.parseArgs = function () {
     param = this.parseVarList();
     tok = this.lexer.next();
   }
+  else if (tok === "NOPARAM") {
+    tok = this.lexer.next();
+  }
   if (tok === "RESULT") {
     result.push(this.parseBasicType('result'));
   }
@@ -298,10 +309,7 @@ AlnumWasmParser.prototype.parseArgs = function () {
   return ['param', param, result];
 };
 
-AlnumWasmParser.prototype.parseMemory = function (isImport) {
-  this.lexer.next();
-  var name = isImport ? this.lexer.word : this.lexer.token;
-  if (!name) throw SyntaxError('missing memory name');
+AlnumWasmParser.prototype.parseSizeLimit = function () {
   var tok = this.lexer.next();
   var min = 0;
   var max = Infinity;
@@ -319,7 +327,7 @@ AlnumWasmParser.prototype.parseMemory = function (isImport) {
     max |= 0; // convert to integer
   }
   else this.lexer.backtrack();
-  return [name, min, max];
+  return {min: min, max: max};
 };
 
 AlnumWasmParser.prototype.parseImport = function () {
@@ -327,23 +335,27 @@ AlnumWasmParser.prototype.parseImport = function () {
   var mod = this.lexer.word;
   if (!mod) throw SyntaxError('missing module name');
   if (this.lexer.next() !== "IMPORT") {
-    throw SyntaxError('expected import, found ' + this.lexer.token);
+    throw SyntaxError('expected IMPORT, found ' + this.lexer.token);
+  }
+  this.lexer.next();
+  var name = this.lexer.word;
+  if (!name) throw SyntaxError('missing import name');
+  if (this.lexer.next() !== "AS") {
+    throw SyntaxError('expected AS, found ' + this.lexer.token);
   }
   var kind = this.lexer.next();
-  var obj;
+  var alias = this.parseName('alias');
+  var options;
   if (kind === "MEMORY") {
-    obj = this.parseMemory('import');
+    options = this.parseSizeLimit();
   }
   else if (kind === "FUNC") {
-    if (!this.lexer.next()) throw SyntaxError('missing function name');
-    obj = [this.lexer.word, this.parseType()];
+    options = this.parseType();
   }
-  var alias;
-  if (this.lexer.next() === "AS") {
-    alias = this.lexer.next();
+  else {
+    throw SyntaxError('unsupported kind of import: ' + kind);
   }
-  else this.lexer.backtrack();
-  this.imports.push([mod, obj[0], kind, obj.slice(1), alias]);
+  this.imports.push([mod, name, kind, alias, options]);
 };
 
 AlnumWasmParser.prototype.parse = function () {
@@ -352,10 +364,10 @@ AlnumWasmParser.prototype.parse = function () {
     if (tok === "FUNC") {
       this.functions.push(this.parseFunc());
     }
-    if (tok === "MEMORY") {
+    else if (tok === "MEMORY") {
       // TODO
     }
-    if (tok === "FROM") {
+    else if (tok === "FROM") {
       this.parseImport();
     }
     tok = this.lexer.next();
@@ -363,8 +375,8 @@ AlnumWasmParser.prototype.parse = function () {
 };
 
 var a = new AlnumWasmParser(
-  "FROM 'Math' IMPORT FUNC 'rand' RESULT F64 AS rand\n" +
-  "FROM 'env' IMPORT MEMORY 'mem'\n" +
+  "FROM 'Math' IMPORT 'rand' AS FUNC rand RESULT F64\n" +
+  "FROM 'env' IMPORT 'mem' AS MEMORY 0\n" +
   "FUNC add EXPORT 'addint' PARAM a AS I32 AND b AS I32 RESULT I32\n" +
   "CODE\n" +
   "  GETLOCAL a GETLOCAL b IADD RETURN\n" +
