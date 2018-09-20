@@ -12,6 +12,9 @@ function AlnumWasmParser(str) {
   this.lexer = new Tokenizer(str);
   this.code = [];
   this.functions = [];
+  this.tables = [];
+  this.memories = [];
+  this.globals = [];
   this.exports = [];
   this.imports = [];
 }
@@ -234,7 +237,7 @@ AlnumWasmParser.prototype.parseInlineExport = function (kind, name) {
 
 AlnumWasmParser.prototype.parseFunc = function () {
   var name = this.parseName('function name');
-  this.parseInlineExport('func', name);
+  this.parseInlineExport('FUNC', name);
   var type = this.parseType();
   var locals = [];
   this.code = [];
@@ -352,10 +355,39 @@ AlnumWasmParser.prototype.parseImport = function () {
   else if (kind === "FUNC") {
     options = this.parseType();
   }
+  else if (kind === "TABLE") {
+    options = this.parseSizeLimit();
+    if (this.lexer.next() !== "AS") {
+      throw SyntaxError('expected AS, found ' + this.lexer.token);
+    }
+    if (this.lexer.next() !== "ANYTYPE") {
+      throw SyntaxError('table type must be ANYTYPE');
+    }
+  }
   else {
     throw SyntaxError('unsupported kind of import: ' + kind);
   }
   this.imports.push([mod, name, kind, alias, options]);
+};
+
+AlnumWasmParser.prototype.parseTable = function () {
+  var name = this.parseName('table name');
+  this.parseInlineExport('TABLE', name);
+  var lim = this.parseSizeLimit();
+  if (this.lexer.next() !== "AS") {
+    throw SyntaxError('expected AS, found ' + this.lexer.token);
+  }
+  if (this.lexer.next() !== "ANYTYPE") {
+    throw SyntaxError('table type must be ANYTYPE');
+  }
+  return [name, lim, 'anytype'];
+};
+
+AlnumWasmParser.prototype.parseMemory = function () {
+  var name = this.parseName('memory name');
+  this.parseInlineExport('MEMORY', name);
+  var lim = this.parseSizeLimit();
+  return [name, lim];
 };
 
 AlnumWasmParser.prototype.parse = function () {
@@ -364,8 +396,11 @@ AlnumWasmParser.prototype.parse = function () {
     if (tok === "FUNC") {
       this.functions.push(this.parseFunc());
     }
+    else if (tok === "TABLE") {
+      this.tables.push(this.parseTable());
+    }
     else if (tok === "MEMORY") {
-      // TODO
+      this.memories.push(this.parseMemory());
     }
     else if (tok === "FROM") {
       this.parseImport();
