@@ -334,6 +334,12 @@ AlnumWasmParser.prototype.parseSizeLimit = function () {
   return {min: min, max: max};
 };
 
+AlnumWasmParser.prototype.parseTypedef = function () {
+  var name = this.parseName('type name');
+  var sig = this.parseArgs();
+  return [name, sig[1], sig[2]];
+};
+
 AlnumWasmParser.prototype.parseImport = function () {
   this.lexer.next();
   var mod = this.lexer.word;
@@ -403,6 +409,9 @@ AlnumWasmParser.prototype.parse = function () {
     else if (tok === "MEMORY") {
       this.memories.push(this.parseMemory());
     }
+    else if (tok === "TYPEDEF") {
+      this.types.push(this.parseTypedef());
+    }
     else if (tok === "FROM") {
       this.parseImport();
     }
@@ -413,6 +422,8 @@ AlnumWasmParser.prototype.parse = function () {
 var a = new AlnumWasmParser(
   "FROM 'Math' IMPORT 'rand' AS FUNC rand RESULT F64\n" +
   "FROM 'env' IMPORT 'mem' AS MEMORY 0\n" +
+  "TYPEDEF 2 PARAM I32 AND I32 AND I32\n" +
+  "TYPEDEF happy NOPARAM RESULT F64\n" +
   "FUNC add EXPORT 'addint' PARAM a AS I32 AND b AS I32 RESULT I32\n" +
   "CODE\n" +
   "  GETLOCAL a GETLOCAL b IADD RETURN\n" +

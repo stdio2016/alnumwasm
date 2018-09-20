@@ -40,7 +40,7 @@ AlnumWasmCompiler.prototype.collectTypes = function () {
     this.typeHash[m] = true;
     this.types.push(types[i]);
   }
-  
+
   var funs = this.parser.functions;
   for (var i = 0; i < funs.length; i++) {
     var f = funs[i];
@@ -71,11 +71,15 @@ AlnumWasmCompiler.prototype.assignTypeId = function () {
     var name = this.types[i][0];
     if (/^\d+/.test(name)) {
       var id = parseInt(name);
-      if (newTable[id]) {
+      if (id >= newTable.length || newTable[id]) {
         while (newTable[rem]) rem++;
+        id = rem;
         newTable[rem++] = this.types[i];
       }
-      else newTable[id] = this.types[i];
+      else {
+        newTable[id] = this.types[i];
+      }
+      this.typeHash[this.types[i][3]] = id;
       this.types[i][0] = null;
     }
   }
@@ -95,8 +99,9 @@ AlnumWasmCompiler.prototype.assignTypeId = function () {
     var name = this.types[i][0];
     if (name === "") {
       while (newTable[rem]) rem++;
-      newTable[rem++] = this.types[i];
+      newTable[rem] = this.types[i];
       this.typeHash[this.types[i][3]] = rem;
+      rem++;
     }
   }
   this.types = newTable;
