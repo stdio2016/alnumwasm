@@ -389,6 +389,46 @@ AlnumWasmCompiler.prototype.funcSection = function () {
   this.code.push(code);
 };
 
+AlnumWasmCompiler.prototype.exportSection = function () {
+  var code = [];
+  var exps = this.parser.exports;
+  AlnumWasmParser.writeUint(exps.length, code);
+  for (var i = 0; i < exps.length; i++) {
+    var name = exps[i][2];
+    var kind = exps[i][1];
+    AlnumWasmCompiler.writeString(exps[i][0], code);
+    if (kind === "FUNC") {
+      code.push(0);
+      var id = this.itemLookup["FUNC_" + name];
+      if (id === void 0)
+        throw ReferenceError('undefined function ' + name);
+    }
+    else if (kind === "TABLE") {
+      code.push(1);
+      var id = this.itemLookup["TABLE_" + name];
+      if (id === void 0)
+        throw ReferenceError('undefined table ' + name);
+    }
+    else if (kind === "MEMORY") {
+      code.push(2);
+      var id = this.itemLookup["MEMORY_" + name];
+      if (id === void 0)
+        throw ReferenceError('undefined memory ' + name);
+    }
+    else if (kind === "GLOBAL") {
+      code.push(3);
+      var id = this.itemLookup["GLOBAL_" + name];
+      if (id === void 0)
+        throw ReferenceError('undefined global ' + name);
+    }
+    AlnumWasmParser.writeUint(id, code);
+  }
+
+  this.code.push(7);
+  AlnumWasmParser.writeUint(code.length, this.code);
+  this.code.push(code);
+};
+
 AlnumWasmCompiler.prototype.codeSection = function () {
   var funcs = this.functions;
   var totalLen = 0;
@@ -456,6 +496,7 @@ AlnumWasmCompiler.prototype.compile = function () {
   this.typeSecton();
   this.importSection();
   this.funcSection();
+  this.exportSection();
   this.codeSection();
   return this.assemble();
 };
