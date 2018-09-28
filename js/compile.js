@@ -3,7 +3,43 @@ function AlnumWasmCompiler(str) {
   this.code = [];
   this.types = [];
   this.typeHash = {};
+  this.itemLookup = {};
+  this.memories = [];
+  this.tables = [];
+  this.globals = [];
 }
+
+AlnumWasmCompiler.writeString = function (str, code) {
+  var size = 0;
+  for (var i = 0; i < str.length; i++) {
+    var c = str.charCodeAt(i);
+    if (c >= 0xd800 && c < 0xdc00) {
+      i++; size += 4;
+    }
+    else if (c >= 0x800) size += 3;
+    else if (c >= 0x80) size += 2;
+    else size += 1;
+  }
+  AlnumWasmParser.writeUint(size, code);
+  for (var i = 0; i < str.length; i++) {
+    var c = str.charCodeAt(i);
+    if (c >= 0xd800 && c < 0xdc00) {
+      var c2 = str.charCodeAt(str, i+1);
+      c = ((c & 0x3ff) << 10 | (c2 & 0x3ff)) + 0x10000;
+      code.push(0xf0 | c>>18, 0x80 | c>>12 & 0x3f, 0x80 | c>>6 & 0x3f, 0x80 | c & 0x3f);
+      i++;
+    }
+    else if (c >= 0x800) {
+      code.push(0xe0 | c>>12, 0x80 | c>>6 & 0x3f, 0x80 | c & 0x3f);
+    }
+    else if (c >= 0x80) {
+      code.push(0xc0 | c>>6, 0x80 | c & 0x3f);
+    }
+    else {
+      code.push(c);
+    }
+  }
+};
 
 AlnumWasmCompiler.getMangleName = function (type) {
   var typeNames = "ILFD";
@@ -18,6 +54,35 @@ AlnumWasmCompiler.getMangleName = function (type) {
     str += typeNames[0x7f - rets[i]];
   }
   return str;
+};
+
+AlnumWasmCompiler.prototype.writeType = function (type, code) {
+  var id;
+  if (type[0] === 'type') {
+    if (onlyDigits(type[1])) {
+      id = parseInt(type[1])
+    }
+    else {
+      id = this.typeHash['type_' + type[1]];
+      if (id === void 0) throw ReferenceError('type ' + type[1] + ' is undefined');
+    }
+  }
+  else {
+    id = type[3];
+  }
+  AlnumWasmParser.writeUint(id, code);
+};
+
+AlnumWasmCompiler.prototype.writeMemSize = function (memsize, code) {
+  if (memsize.max === Infinity) {
+    code.push(0);
+    AlnumWasmParser.writeUint(memsize.min, code);
+  }
+  else {
+    code.push(1);
+    AlnumWasmParser.writeUint(memsize.min, code);
+    AlnumWasmParser.writeUint(memsize.max, code);
+  } 
 };
 
 AlnumWasmCompiler.prototype.addTypeSig = function (type) {
@@ -107,6 +172,78 @@ AlnumWasmCompiler.prototype.assignTypeId = function () {
   this.types = newTable;
 };
 
+AlnumWasmCompiler.prototype.assignImportId = function (kind, myItems) {
+  var imps = this.parser.imports;
+  var impItems = [];
+  for (var i = 0; i < imps.length; i++) {
+    if (imps[i][2] === kind) {
+      impItems.push(imps[i]);
+    }
+  }
+  var newImp = new Array(impItems.length);
+  var lookup = this.itemLookup;
+  var rem = 0;
+  // first assign id to imported items
+  // 1. assign number name
+  for (var i = 0; i < impItems.length; i++) {
+    var name = impItems[i][3];
+    if (onlyDigits(name)) {
+      var id = parseInt(name);
+      if (id >= impItems.length || newImp[id]) {
+        while (newImp[rem]) rem++;
+        id = rem;
+        newImp[rem++] = impItems[i];
+      }
+      else {
+        newImp[id] = impItems[i];
+      }
+      lookup[kind + '_' + name] = id;
+    }
+  }
+  // 2. assign non empty name
+  for (var i = 0; i < impItems.length; i++) {
+    var name = impItems[i][3];
+    if (!onlyDigits(name)) {
+      while (newImp[rem]) rem++;
+      lookup[kind + '_' + name] = rem;
+      newImp[rem] = impItems[i];
+      rem++;
+    }
+  }
+  
+  // then assign id to module items
+  var newTable = new Array(myItems.length);
+  rem = 0;
+  // 1. assign number name
+  for (var i = 0; i < myItems.length; i++) {
+    var name = myItems[i][0];
+    if (onlyDigits(name)) {
+      var id = parseInt(name);
+      if (id < impItems.length || id >= impItems.length + myItems.length
+      || newTable[id - impItems.length]) {
+        while (newTable[rem]) rem++;
+        id = rem;
+        newTable[rem++] = myItems[i];
+      }
+      else {
+        newTable[id - impItems.length] = myItems[i];
+      }
+      lookup[kind + '_' + name] = id;
+    }
+  }
+  // 2. assign non empty name
+  for (var i = 0; i < myItems.length; i++) {
+    var name = myItems[i][0];
+    if (!onlyDigits(name)) {
+      while (newTable[rem]) rem++;
+      lookup[kind + '_' + name] = rem + impItems.length;
+      newTable[rem] = myItems[i];
+      rem++;
+    }
+  }
+  return [newImp, newTable];
+};
+
 AlnumWasmCompiler.prototype.magic = function () {
   this.code = [0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00];
 };
@@ -127,6 +264,49 @@ AlnumWasmCompiler.prototype.typeSecton = function () {
     }
   }
   this.code.push(1);
+  AlnumWasmParser.writeUint(code.length, this.code);
+  this.code.push(code);
+};
+
+AlnumWasmCompiler.prototype.importSection = function () {
+  var code = [];
+  var imp = this.parser.imports;
+  AlnumWasmParser.writeUint(imp.length, code);
+  for (var i = 0; i < imp.length; i++) {
+    if (imp[i][2] === "FUNC") {
+      AlnumWasmCompiler.writeString(imp[i][0], code);
+      AlnumWasmCompiler.writeString(imp[i][1], code);
+      code.push(0);
+      this.writeType(imp[i][4], code);
+    }
+  }
+  var ids = this.assignImportId("TABLE", this.parser.tables);
+  this.tables = ids[1];
+  for (var i = 0; i < ids[0].length; i++) {
+    AlnumWasmCompiler.writeString(ids[0][i][0], code);
+    AlnumWasmCompiler.writeString(ids[0][i][1], code);
+    code.push(1);
+    code.push(0x70); // anyfunc
+    this.writeMemSize(ids[0][i][4], code);
+  }
+  ids = this.assignImportId("MEMORY", this.parser.memories);
+  this.memories = ids[1];
+  for (var i = 0; i < ids[0].length; i++) {
+    AlnumWasmCompiler.writeString(ids[0][i][0], code);
+    AlnumWasmCompiler.writeString(ids[0][i][1], code);
+    code.push(2);
+    this.writeMemSize(ids[0][i][4], code);
+  }
+  ids = this.assignImportId("GLOBAL", this.parser.globals);
+  this.globals = ids[1];
+  for (var i = 0; i < ids[0].length; i++) {
+    AlnumWasmCompiler.writeString(ids[0][i][0], code);
+    AlnumWasmCompiler.writeString(ids[0][i][1], code);
+    code.push(3);
+    // TODO write global
+  }
+
+  this.code.push(2);
   AlnumWasmParser.writeUint(code.length, this.code);
   this.code.push(code);
 };
@@ -156,11 +336,13 @@ AlnumWasmCompiler.prototype.compile = function () {
   this.assignTypeId();
   this.magic();
   this.typeSecton();
+  this.importSection();
   return this.assemble();
 };
 
 var b = new AlnumWasmCompiler(a.lexer.str);
-WebAssembly.compile(b.compile()).then(function (r) {
+var buf = b.compile();
+WebAssembly.compile(buf).then(function (r) {
   window.hello = r;
   console.log('hello webassembly');
 }).catch(function (e) {

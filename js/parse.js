@@ -6,6 +6,10 @@ const BlockTypes = {
   I: 0x7f, L: 0x7e, F: 0x7d, D: 0x7c
 };
 
+function onlyDigits(str) {
+  return /^\d+$/.test(str);
+}
+
 function AlnumWasmParser(str) {
   this.scope = [];
   this.labelNames = {};
@@ -73,7 +77,7 @@ AlnumWasmParser.prototype.parseExpr = function () {
     else if (op === OpCodes.BR || op === OpCodes.BRIF) {
       var name = this.lexer.next();
       var lv;
-      if (/^\d+$/.test(name)) {
+      if (onlyDigits(name)) {
         lv = parseInt(name);
       }
       else {
@@ -90,7 +94,7 @@ AlnumWasmParser.prototype.parseExpr = function () {
     }
     else if (op === OpCodes.CALL) {
       var name = this.lexer.next();
-      if (/^\d+$/.test(name)) {
+      if (onlyDigits(name)) {
         AlnumWasmParser.writeUint(parseInt(name), this.code);
       }
       else {
@@ -104,7 +108,7 @@ AlnumWasmParser.prototype.parseExpr = function () {
     }
     else if (op >= OpCodes.GETLOCAL && op <= OpCodes.TEELOCAL) {
       var vname = this.lexer.next();
-      if (/^\d+$/.test(vname)) {
+      if (onlyDigits(vname)) {
         AlnumWasmParser.writeUint(parseInt(vname), this.code);
       }
       else {
@@ -113,7 +117,7 @@ AlnumWasmParser.prototype.parseExpr = function () {
     }
     else if (op >= OpCodes.GETGLOBAL && op <= OpCodes.SETGLOBAL) {
       var vname = this.lexer.next();
-      if (/^\d+$/.test(vname)) {
+      if (onlyDigits(vname)) {
         AlnumWasmParser.writeUint(parseInt(vname), this.code);
       }
       else {
@@ -143,7 +147,7 @@ AlnumWasmParser.prototype.parseBlockOp = function () {
   if (tok === "LBL") {
     tok = this.lexer.next();
     if (!tok) throw SyntaxError("missing label name");
-    if (/^\d+$/.test(tok)) throw SyntaxError("label name cannot be all digits");
+    if (onlyDigits(tok)) throw SyntaxError("label name cannot be all digits");
     this.scope.push([tok, this.labelNames[tok]]);
     this.labelNames[tok] = this.scope.length;
   }
@@ -167,7 +171,7 @@ AlnumWasmParser.prototype.parseMemoryOp = function () {
   if (tok === "ALIGN") {
     tok = this.lexer.next();
     if (!tok) throw SyntaxError("missing alignment");
-    if (!/^\d+$/.test(tok)) throw SyntaxError("alignment is not an integer");
+    if (!onlyDigits(tok)) throw SyntaxError("alignment is not an integer");
     align = AlnumWasmParser.log2(parseInt(tok), true);
   }
   else this.lexer.backtrack();
@@ -176,7 +180,7 @@ AlnumWasmParser.prototype.parseMemoryOp = function () {
   if (tok === "OFFSET" || tok === "OFF") {
     tok = this.lexer.next();
     if (!tok) throw SyntaxError("missing offset");
-    if (!/^\d+$/.test(tok)) throw SyntaxError("offset is not an integer");
+    if (!onlyDigits(tok)) throw SyntaxError("offset is not an integer");
     offset = parseInt(tok);
   }
   else this.lexer.backtrack();
@@ -319,16 +323,16 @@ AlnumWasmParser.prototype.parseSizeLimit = function () {
   var max = Infinity;
   if (tok === "MIN") {
     min = this.lexer.next();
-    if (!/^\d+$/.test(min))
+    if (!onlyDigits(min))
       throw SyntaxError(min + ' is not a valid memory size');
-    min |= 0; // convert to integer
+    min = parseInt(min); // convert to integer
     tok = this.lexer.next();
   }
   if (tok === "MAX") {
     max = this.lexer.next();
-    if (!/^\d+$/.test(max))
+    if (!onlyDigits(max))
       throw SyntaxError(min + ' is not a valid memory size');
-    max |= 0; // convert to integer
+    max = parseInt(max); // convert to integer
   }
   else this.lexer.backtrack();
   return {min: min, max: max};
