@@ -222,7 +222,7 @@ AlnumWasmCompiler.prototype.assignImportId = function (kind, myItems) {
       if (id < impItems.length || id >= impItems.length + myItems.length
       || newTable[id - impItems.length]) {
         while (newTable[rem]) rem++;
-        id = rem;
+        id = rem + impItems.length;
         newTable[rem++] = myItems[i];
       }
       else {
@@ -303,7 +303,8 @@ AlnumWasmCompiler.prototype.importSection = function () {
     AlnumWasmCompiler.writeString(ids[0][i][0], code);
     AlnumWasmCompiler.writeString(ids[0][i][1], code);
     code.push(3);
-    // TODO write global
+    code.push(ids[0][i][4].type);
+    code.push(ids[0][i][4].mut ? 1 : 0);
   }
 
   this.code.push(2);

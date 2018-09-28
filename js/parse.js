@@ -338,6 +338,19 @@ AlnumWasmParser.prototype.parseSizeLimit = function () {
   return {min: min, max: max};
 };
 
+AlnumWasmParser.prototype.parseGlobalType = function () {
+  if (this.lexer.next() !== "AS")
+    throw SyntaxError('expected AS, found ' + this.lexer.token);
+  var mut = false;
+  if (this.lexer.next() === "MUT") {
+    mut = true;
+    this.lexer.next();
+  }
+  var type = BlockTypes[this.lexer.token];
+  if (type === void 0) throw SyntaxError('unknown type ' + argname);
+  return {mut: mut, type: type};
+};
+
 AlnumWasmParser.prototype.parseTypedef = function () {
   var name = this.parseName('type name');
   var sig = this.parseArgs();
@@ -375,6 +388,9 @@ AlnumWasmParser.prototype.parseImport = function () {
       throw SyntaxError('table type must be ANYTYPE');
     }
   }
+  else if (kind === "GLOBAL") {
+    options = this.parseGlobalType();
+  }
   else {
     throw SyntaxError('unsupported kind of import: ' + kind);
   }
@@ -401,6 +417,20 @@ AlnumWasmParser.prototype.parseMemory = function () {
   return [name, lim];
 };
 
+AlnumWasmParser.prototype.parseGlobal = function () {
+  var name = this.parseName('global name');
+  this.parseInlineExport('GLOBAL', name);
+  var type = this.parseGlobalType();
+  var init = [OpCodes.END];
+  if (this.lexer.next() === "INIT") {
+    this.code = [];
+    this.parseExpr();
+    init = this.code;
+  }
+  else this.lexer.backtrack();
+  return [name, type, init];
+};
+
 AlnumWasmParser.prototype.parse = function () {
   var tok = this.lexer.next();
   while (tok) {
@@ -416,6 +446,9 @@ AlnumWasmParser.prototype.parse = function () {
     else if (tok === "TYPEDEF") {
       this.types.push(this.parseTypedef());
     }
+    else if (tok === "GLOBAL") {
+      this.globals.push(this.parseGlobal());
+    }
     else if (tok === "FROM") {
       this.parseImport();
     }
@@ -424,10 +457,12 @@ AlnumWasmParser.prototype.parse = function () {
 };
 
 var a = new AlnumWasmParser(
-  "FROM 'Math' IMPORT 'rand' AS FUNC rand RESULT F64\n" +
+  "FROM 'Math' IMPORT 'random' AS FUNC rand RESULT F64\n" +
   "FROM 'env' IMPORT 'mem' AS MEMORY 0\n" +
+  "FROM 'env' IMPORT 'winsize' AS GLOBAL winsize AS I32\n" +
   "TYPEDEF 2 PARAM I32 AND I32 AND I32\n" +
   "TYPEDEF happy NOPARAM RESULT F64\n" +
+  "GLOBAL abc AS I32 INIT ICONST 123 END\n" +
   "FUNC add EXPORT 'addint' PARAM a AS I32 AND b AS I32 RESULT I32\n" +
   "CODE\n" +
   "  GETLOCAL a GETLOCAL b IADD RETURN\n" +
