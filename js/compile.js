@@ -68,7 +68,7 @@ AlnumWasmCompiler.prototype.writeType = function (type, code) {
     }
   }
   else {
-    id = type[3];
+    id = this.typeHash[type[3]];
   }
   AlnumWasmParser.writeUint(id, code);
 };
@@ -331,6 +331,62 @@ AlnumWasmCompiler.prototype.assemble = function () {
   return buf;
 };
 
+AlnumWasmCompiler.prototype.funcSection = function () {
+  var code = [];
+  var funcs = this.parser.functions;
+  AlnumWasmParser.writeUint(funcs.length, code);
+  for (var i = 0; i < funcs.length; i++) {
+    this.writeType(funcs[i][1], code);
+  }
+
+  this.code.push(3);
+  AlnumWasmParser.writeUint(code.length, this.code);
+  this.code.push(code);
+};
+
+AlnumWasmCompiler.prototype.codeSection = function () {
+  var funcs = this.parser.functions;
+  var totalLen = 0;
+  var codes = [];
+  AlnumWasmParser.writeUint(funcs.length, codes);
+  for (var i = 0; i < funcs.length; i++) {
+    var fun = funcs[i];
+    var code = [];
+    var locals = fun[2];
+    var localcnt = 0, locallen = 0;
+    // count local type changes
+    for (var j = 0; j < locals.length; j++) {
+      // type change
+      if (j === locals.length-1 || locals[j+1][1] !== locals[j][1]) {
+        locallen++;
+      }
+    }
+    AlnumWasmParser.writeUint(locallen, code);
+    // write local types
+    for (var j = 0; j < locals.length; j++) {
+      // type change
+      localcnt++;
+      if (j === locals.length-1 || locals[j+1][1] !== locals[j][1]) {
+        AlnumWasmParser.writeUint(localcnt, code);
+        code.push(locals[j][1]);
+        localcnt = 0;
+      }
+    }
+    // TODO write code
+    code.push(OpCodes.END);
+    
+    AlnumWasmParser.writeUint(code.length, codes);
+    codes.push(code);
+    totalLen += code.length-1;
+  }
+
+  this.code.push(10);
+  AlnumWasmParser.writeUint(totalLen + codes.length, this.code);
+  for (var i = 0; i < codes.length; i++) {
+    this.code.push(codes[i]);
+  }
+};
+
 AlnumWasmCompiler.prototype.compile = function () {
   this.parser.parse();
   this.collectTypes();
@@ -338,6 +394,8 @@ AlnumWasmCompiler.prototype.compile = function () {
   this.magic();
   this.typeSecton();
   this.importSection();
+  this.funcSection();
+  this.codeSection();
   return this.assemble();
 };
 
