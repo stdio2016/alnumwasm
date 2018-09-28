@@ -22,8 +22,8 @@ const OpCodes = {
   CALLINDIRECT: 0x11, CALLIND: 0x11,
 
 // getlocal <name>
-  GETLOCAL: 0x20, LOAD: 0x20,
-  SETLOCAL: 0x21, STORE: 0x21,
+  GETLOCAL: 0x20, GET: 0x20,
+  SETLOCAL: 0x21, SET: 0x21,
   TEELOCAL: 0x22,
   GETGLOBAL: 0x23,
   SETGLOBAL: 0x24,
@@ -68,7 +68,7 @@ const OpCodes = {
   NOP: 0x1,
   ELSE: 0x5,
   RETURN: 0xF,
-  DROP: 0x1A,
+  DROP: 0x1A, POP: 0x1A,
   SELECT: 0x1B,
 
 // arithmetic and comparison ops at bottom

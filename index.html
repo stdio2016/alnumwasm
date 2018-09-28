@@ -10,5 +10,38 @@
 <script src="js/parse.js"></script>
 <script src="js/compile.js"></script>
 <script src="test/test.js"></script>
+<p>Test Alnumwasm</p>
+<script>
+var env = {};
+var myModule;
+
+function loadScript() {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = gotScript;
+  xhr.responseType = 'text';
+  xhr.open('GET', 'test/dlx.txt');
+  xhr.send();
+}
+
+function gotScript(e) {
+  var b = new AlnumWasmCompiler(e.target.response);
+  var buf = b.compile();
+  WebAssembly.compile(buf).then(asm => {
+    env.mem = new WebAssembly.Memory({initial: 1});
+    env.root = 0;
+    return WebAssembly.instantiate(asm, {env: env});
+  }).catch(e => {
+    console.error(e);
+  }).then(inst => {
+    myModule = inst;
+    myModule.exports.knight(0, 0, 1);
+    console.log(new Int32Array(env.mem.buffer, 0, 64));
+  }).catch(e => {
+    console.error(e);
+  });
+}
+
+loadScript();
+</script>
 </body>
 </html>

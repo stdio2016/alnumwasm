@@ -1,0 +1,48 @@
+from env import mem as memory 0
+from env import root as global root as i32
+
+; solves knight tour problem
+func knight export knight param x as i32 and y as i32 and lv as i32 result i32
+local pos as i32
+code
+  ; bound check
+  get x iconst 8 iges get x iconst 0 ilts ior
+  get y iconst 8 iges get y iconst 0 ilts ior ior
+  if iconst 0 return end
+  
+  ; get array index
+  get x get y iconst 3 ishl iadd iconst 2 ishl set pos
+  
+  ; test if a square is visited
+  get pos iload align 4 if iconst 0 return end
+  get pos get lv istore align 4
+  
+  ; test if finished
+  get lv iconst 64 iges if iconst 1 return end
+  
+  block
+    get lv iconst 1 iadd set lv
+    
+    ; try every direction
+    get x iconst 1 iadd get y iconst 2 iadd get lv call knight brif 0
+    get x iconst 2 iadd get y iconst 1 iadd get lv call knight brif 0
+    get x iconst 2 iadd get y iconst m1 iadd get lv call knight brif 0
+    get x iconst 1 iadd get y iconst m2 iadd get lv call knight brif 0
+    get x iconst m1 iadd get y iconst 2 iadd get lv call knight brif 0
+    get x iconst m2 iadd get y iconst 1 iadd get lv call knight brif 0
+    get x iconst m2 iadd get y iconst m1 iadd get lv call knight brif 0
+    get x iconst m1 iadd get y iconst m2 iadd get lv call knight brif 0
+    
+    ; no moves
+    get pos iconst 0 istore align 4
+    iconst 0 return
+  end
+  iconst 1
+end
+
+func dlx export dlx
+local c as i32 and n as i32 and dr as i32 and dc as i32
+  and n2 as i32 and c2 as i32 and n3 as i32
+code
+
+end
