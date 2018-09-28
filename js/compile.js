@@ -4,6 +4,7 @@ function AlnumWasmCompiler(str) {
   this.types = [];
   this.typeHash = {};
   this.itemLookup = {};
+  this.functions = [];
   this.memories = [];
   this.tables = [];
   this.globals = [];
@@ -60,7 +61,8 @@ AlnumWasmCompiler.prototype.writeType = function (type, code) {
   var id;
   if (type[0] === 'type') {
     if (onlyDigits(type[1])) {
-      id = parseInt(type[1])
+      id = parseInt(type[1]);
+      if (id >= this.types.length) throw ReferenceError('type id ' + id + ' too big');
     }
     else {
       id = this.typeHash['type_' + type[1]];
@@ -244,6 +246,49 @@ AlnumWasmCompiler.prototype.assignImportId = function (kind, myItems) {
   return [newImp, newTable];
 };
 
+AlnumWasmCompiler.prototype.writeCode = function (code, args, locals, out) {
+  var scope = {};
+  console.log(args, locals);
+  if (args && locals) {
+    for (var i = 0; i < args.length; i++) {
+      var name = args[i][0];
+      scope["v_"+name] = i;
+    }
+    for (var i = 0; i < locals.length; i++) {
+      var name = locals[i][0];
+      scope["v_" + name] = args.length + i;
+    }
+  }
+  for (var i = 0; i < code.length; i++) {
+    if (code[i] instanceof Array) {
+      if (code[i][0] === 'type') {
+        this.writeType(code[i], out);
+      }
+      else if (code[i][0] === 'local') {
+        var id = scope["v_" + code[i][1]];
+        if (id === void 0)
+          throw ReferenceError('undefined local ' + code[i][1]);
+        AlnumWasmParser.writeUint(id, out);
+      }
+      else if (code[i][0] === 'global') {
+        var id = this.itemLookup["GLOBAL_" + code[i][1]];
+        if (id === void 0)
+          throw ReferenceError('undefined global ' + code[i][1]);
+        AlnumWasmParser.writeUint(id, out);
+      }
+      else if (code[i][0] === 'func') {
+        var id = this.itemLookup["FUNC_" + code[i][1]];
+        if (id === void 0)
+          throw ReferenceError('undefined function ' + code[i][1]);
+        AlnumWasmParser.writeUint(id, out);
+      }
+    }
+    else {
+      out.push(code[i]);
+    }
+  }
+};
+
 AlnumWasmCompiler.prototype.magic = function () {
   this.code = [0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00];
 };
@@ -272,15 +317,15 @@ AlnumWasmCompiler.prototype.importSection = function () {
   var code = [];
   var imp = this.parser.imports;
   AlnumWasmParser.writeUint(imp.length, code);
-  for (var i = 0; i < imp.length; i++) {
-    if (imp[i][2] === "FUNC") {
-      AlnumWasmCompiler.writeString(imp[i][0], code);
-      AlnumWasmCompiler.writeString(imp[i][1], code);
-      code.push(0);
-      this.writeType(imp[i][4], code);
-    }
+  var ids = this.assignImportId("FUNC", this.parser.functions);
+  this.functions = ids[1];
+  for (var i = 0; i < ids[0].length; i++) {
+    AlnumWasmCompiler.writeString(ids[0][i][0], code);
+    AlnumWasmCompiler.writeString(ids[0][i][1], code);
+    code.push(0);
+    this.writeType(ids[0][i][4], code);
   }
-  var ids = this.assignImportId("TABLE", this.parser.tables);
+  ids = this.assignImportId("TABLE", this.parser.tables);
   this.tables = ids[1];
   for (var i = 0; i < ids[0].length; i++) {
     AlnumWasmCompiler.writeString(ids[0][i][0], code);
@@ -333,7 +378,7 @@ AlnumWasmCompiler.prototype.assemble = function () {
 
 AlnumWasmCompiler.prototype.funcSection = function () {
   var code = [];
-  var funcs = this.parser.functions;
+  var funcs = this.functions;
   AlnumWasmParser.writeUint(funcs.length, code);
   for (var i = 0; i < funcs.length; i++) {
     this.writeType(funcs[i][1], code);
@@ -345,7 +390,7 @@ AlnumWasmCompiler.prototype.funcSection = function () {
 };
 
 AlnumWasmCompiler.prototype.codeSection = function () {
-  var funcs = this.parser.functions;
+  var funcs = this.functions;
   var totalLen = 0;
   var codes = [];
   AlnumWasmParser.writeUint(funcs.length, codes);
@@ -372,8 +417,24 @@ AlnumWasmCompiler.prototype.codeSection = function () {
         localcnt = 0;
       }
     }
-    // TODO write code
-    code.push(OpCodes.END);
+    var args;
+    if (fun[1][0] === "type") {
+      var name = fun[1][1];
+      var id;
+      if (onlyDigits(name)) {
+        id = parseInt(name);
+        if (id >= this.types.length) throw ReferenceError('type id ' + name + ' too big');
+      }
+      else {
+        id = this.typeHash['type_' + name];
+        if (id === void 0) throw ReferenceError('type ' + name + ' is undefined');
+      }
+      args = this.types[id][1];
+    }
+    else {
+      args = fun[1][1];
+    }
+    this.writeCode(fun[3], args, fun[2], code);
     
     AlnumWasmParser.writeUint(code.length, codes);
     codes.push(code);
