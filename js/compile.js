@@ -248,7 +248,6 @@ AlnumWasmCompiler.prototype.assignImportId = function (kind, myItems) {
 
 AlnumWasmCompiler.prototype.writeCode = function (code, args, locals, out) {
   var scope = {};
-  console.log(args, locals);
   if (args && locals) {
     for (var i = 0; i < args.length; i++) {
       var name = args[i][0];
@@ -500,12 +499,3 @@ AlnumWasmCompiler.prototype.compile = function () {
   this.codeSection();
   return this.assemble();
 };
-
-var b = new AlnumWasmCompiler(a.lexer.str);
-var buf = b.compile();
-WebAssembly.compile(buf).then(function (r) {
-  window.hello = r;
-  console.log('hello webassembly');
-}).catch(function (e) {
-  console.log(e);
-});
