@@ -421,13 +421,23 @@ AlnumWasmParser.prototype.parseGlobal = function () {
   var name = this.parseName('global name');
   this.parseInlineExport('GLOBAL', name);
   var type = this.parseGlobalType();
-  var init = [OpCodes.END];
+  var init;
   if (this.lexer.next() === "INIT") {
     this.code = [];
     this.parseExpr();
     init = this.code;
   }
-  else this.lexer.backtrack();
+  else {
+    this.lexer.backtrack();
+    if (type.type === BlockTypes.I32)
+      init = [OpCodes.I32CONST, 0, OpCodes.END];
+    else if (type.type === BlockTypes.I64)
+      init = [OpCodes.I64CONST, 0, OpCodes.END];
+    else if (type.type === BlockTypes.F32)
+      init = [OpCodes.F32CONST, 0, 0, 0, 0, OpCodes.END];
+    else if (type.type === BlockTypes.F64)
+      init = [OpCodes.F64CONST, 0, 0, 0, 0, 0, 0, 0, 0, OpCodes.END];
+  }
   return [name, type, init];
 };
 

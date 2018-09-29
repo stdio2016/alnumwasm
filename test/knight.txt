@@ -1,5 +1,4 @@
-from env import mem as memory 0
-from env import root as global root as i32
+memory 0 export solution min 1
 
 ; solves knight tour problem
 func knight export knight param x as i32 and y as i32 and lv as i32 result i32
@@ -38,11 +37,4 @@ code
     iconst 0 return
   end
   iconst 1
-end
-
-func dlx export dlx
-local c as i32 and n as i32 and dr as i32 and dc as i32
-  and n2 as i32 and c2 as i32 and n3 as i32
-code
-
 end

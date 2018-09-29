@@ -388,6 +388,48 @@ AlnumWasmCompiler.prototype.funcSection = function () {
   this.code.push(code);
 };
 
+AlnumWasmCompiler.prototype.tableSection = function () {
+  var code = [];
+  var tbls = this.tables;
+  AlnumWasmParser.writeUint(tbls.length, code);
+  for (var i = 0; i < tbls.length; i++) {
+    code.push(0x70);
+    this.writeMemSize(tbls[i][1], code);
+  }
+
+  this.code.push(4);
+  AlnumWasmParser.writeUint(code.length, this.code);
+  this.code.push(code);
+};
+
+AlnumWasmCompiler.prototype.memSection = function () {
+  var code = [];
+  var mems = this.memories;
+  AlnumWasmParser.writeUint(mems.length, code);
+  for (var i = 0; i < mems.length; i++) {
+    this.writeMemSize(mems[i][1], code);
+  }
+
+  this.code.push(5);
+  AlnumWasmParser.writeUint(code.length, this.code);
+  this.code.push(code);
+};
+
+AlnumWasmCompiler.prototype.globalSection = function () {
+  var code = [];
+  var globs = this.globals;
+  AlnumWasmParser.writeUint(globs.length, code);
+  for (var i = 0; i < globs.length; i++) {
+    code.push(globs[i][1].type);
+    code.push(globs[i][1].mut ? 1 : 0);
+    this.writeCode(globs[i][2], null, null, code);
+  }
+
+  this.code.push(6);
+  AlnumWasmParser.writeUint(code.length, this.code);
+  this.code.push(code);
+};
+
 AlnumWasmCompiler.prototype.exportSection = function () {
   var code = [];
   var exps = this.parser.exports;
@@ -495,6 +537,9 @@ AlnumWasmCompiler.prototype.compile = function () {
   this.typeSecton();
   this.importSection();
   this.funcSection();
+  this.tableSection();
+  this.memSection();
+  this.globalSection();
   this.exportSection();
   this.codeSection();
   return this.assemble();
