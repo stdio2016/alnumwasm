@@ -1,9 +1,11 @@
 memory 0 export solution min 1
+global cnt export cnt as mut f64
 
 ; solves knight tour problem
 func knight export knight param x as i32 and y as i32 and lv as i32 result i32
 local pos as i32
 code
+  getglobal cnt dconst 1 dadd setglobal cnt
   ; bound check
   get x iconst 8 iges get x iconst 0 ilts ior
   get y iconst 8 iges get y iconst 0 ilts ior ior

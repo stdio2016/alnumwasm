@@ -18,7 +18,9 @@ function gotScript(e) {
     return WebAssembly.instantiate(asm, {env: env});
   }).then(inst => {
     knightModule = inst;
+    console.time('Knight tour');
     knightModule.exports.knight(0, 0, 1);
+    console.timeEnd('Knight tour');
     var sol = new Int32Array(knightModule.exports.solution.buffer, 0, 64);
     console.log(sol);
     var tb = document.createElement('table');
