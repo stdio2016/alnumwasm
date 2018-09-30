@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="js/tokenizer.js"></script>
+<script src="js/opcodes.js"></script>
+<script src="js/parse.js"></script>
+<script src="js/compile.js"></script>
+<script src='test/dlx.js'></script>
+</head>
+<body>
+<h1>Dancing links</h1>
+<iframe src='test/dlx.txt'></iframe>
+<p>In this example, I use Dancing links to solve 8 queens problem</p>
+<p>
+<button onclick='testDlxJs()'>Run JavaScript version</button>
+<span id='jsResult'></span>
+</p>
+<p>
+<button onclick='testDlx()'>Run Alnumwasm version</button>
+</p>
+</body>
+</html>
