@@ -43,10 +43,6 @@ function Matrix() {
   this.root = new MatrixColumn(-1);
   this.rows = [];
   this.cols = [];
-  this.deletedRow = [];
-  this.deletedCol = [];
-  this.drc = 0;
-  this.dcc = 0;
   this.choice = [];
   this.solution = [];
   this.tried = 0;
@@ -80,33 +76,30 @@ Matrix.prototype.addRow = function (row, cols) {
 };
 
 Matrix.prototype.unlinkRow = function (n, includeN) {
-  this.deletedRow[this.drc] = n;
-  this.drc += 1;
-  n = n;
   var e = n;
-  do {
+  n = includeN ? n : n.r;
+  while (n !== e) {
     n.u.d = n.d;
     n.d.u = n.u;
     n.col.size -= 1;
     n = n.r;
-  } while (n !== e) ;
+  }
 };
 
 Matrix.prototype.unlinkColumn = function (n) {
-  this.deletedCol[this.dcc] = n;
-  this.dcc += 1;
   n.l.r = n.r;
   n.r.l = n.l;
 };
 
-Matrix.prototype.relinkRow = function (n) {
+Matrix.prototype.relinkRow = function (n, includeN) {
   var e = n;
-  do {
+  n = includeN ? n : n.r;
+  while (n !== e) {
     n.u.d = n;
     n.d.u = n;
     n.col.size += 1;
     n = n.r;
-  } while (n !== e) ;
+  }
 };
 
 Matrix.prototype.relinkColumn = function (n) {
@@ -128,7 +121,6 @@ Matrix.prototype.dlx = function () {
 
 Matrix.prototype.dlxRunner = function (lv) {
   this.tried++;
-  var dr = this.drc, dc = this.dcc;
   var c = this.root;
   var minfit = -1;
   for (var col = c.r; col !== this.root; col = col.r) {
@@ -136,7 +128,7 @@ Matrix.prototype.dlxRunner = function (lv) {
     if (col.value <= col.max  && col.value >= col.min) continue;
     // unusable
     if (col.value > col.max || col.value + col.size < col.min) {
-      return false;
+      return;
     }
     // min fit
     if (col.size < minfit || minfit === -1) {
@@ -147,17 +139,13 @@ Matrix.prototype.dlxRunner = function (lv) {
   if (minfit === -1) {
     // solved!
     this.solution.push(this.choice.slice(0));
-    return true;
+    return;
   }
   
   var n = c.first.d;
-  var solved = false;
-  var i = 0;
   do {
     // try a row
     var n2 = n;
-    this.unlinkRow(n);
-    i++;
     this.choice[lv] = n.row;
     
     // increase value and remove rows/columns
@@ -168,43 +156,42 @@ Matrix.prototype.dlxRunner = function (lv) {
         this.unlinkColumn(c2);
         var n3 = c2.first.d;
         while (n3 !== c2.first) {
-          this.unlinkRow(n3);
+          this.unlinkRow(n3, false);
           n3 = n3.d;
         }
       }
       n2 = n2.r;
     } while (n2 !== n) ;
-    
-    if (this.dlxRunner(lv+1)) solved = true;
-    
-    // undo increase value
-    n2 = n;
-    do {
-      var c2 = n2.col;
-      c2.value -= 1;
-      n2 = n2.r;
-    } while (n2 !== n) ;
+
+    this.dlxRunner(lv+1);
     
     // recover deleted rows/columns
-    while (this.drc > dr + i) {
-      this.drc -= 1;
-      this.relinkRow(this.deletedRow[this.drc]);
-    }
-    while (this.dcc > dc) {
-      this.dcc -= 1;
-      this.relinkColumn(this.deletedCol[this.dcc]);
-    }
+    n2 = n;
+    do {
+      n2 = n2.l;
+      var c2 = n2.col;
+      if (c2.value === c2.max) {
+        var n3 = c2.first.u;
+        while (n3 !== c2.first) {
+          this.relinkRow(n3, false);
+          n3 = n3.u;
+        }
+        this.relinkColumn(c2);
+      }
+      c2.value -= 1;
+    } while (n2 !== n) ;
+    this.unlinkRow(n, true);
     
     // go next
     n = n.d;
   } while (n !== c.first) ;
   
   // recover tried rows
-  while (this.drc > dr) {
-    this.drc -= 1;
-    this.relinkRow(this.deletedRow[this.drc]);
+  n = c.first.u;
+  while (n !== c.first) {
+    this.relinkRow(n, true);
+    n = n.u;
   }
-  return solved;
 };
 
 function testDlxJs() {
