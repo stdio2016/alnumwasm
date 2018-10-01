@@ -113,7 +113,7 @@ const OpCodes = {
   }
   addOp(
     0x45,
-    ["EQ","EQZ","NE", "LTS","LTU","GTS","GTU","LES","LEU","GES","GEU"],
+    ["EQZ","EQ","NE", "LTS","LTU","GTS","GTU","LES","LEU","GES","GEU"],
     ["I32", "I64"], "IL"
   );
   addOp(
