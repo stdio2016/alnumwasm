@@ -530,7 +530,16 @@ AlnumWasmCompiler.prototype.codeSection = function () {
 };
 
 AlnumWasmCompiler.prototype.compile = function () {
-  this.parser.parse();
+  try {
+    this.parser.parse();
+  } catch (e) {
+    if (e instanceof SyntaxError || e instanceof ReferenceError) {
+      var lex = this.parser.lexer;
+      e.message += ' at line ' + lex.lineno + ' col ' + 
+        (lex.pos - lex.lineStart - lex.token.length + 1);
+    }
+    throw e;
+  }
   this.collectTypes();
   this.assignTypeId();
   this.magic();

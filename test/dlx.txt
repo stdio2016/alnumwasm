@@ -1,0 +1,9 @@
+from env import mem as memory 0
+global sol as mut i32
+global sollim as mut i32
+global solpcs as mut i32
+global solpcslim as mut i32
+
+func dlx
+code
+end

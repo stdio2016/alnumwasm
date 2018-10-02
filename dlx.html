@@ -11,14 +11,16 @@
 </head>
 <body>
 <h1>Dancing links</h1>
-<iframe src='test/dlx.txt'></iframe>
 <p>In this example, I use Dancing links to solve 8 queens problem</p>
 <p>
 <button onclick='testDlxJs()'>Run JavaScript version</button>
 <span id='jsResult'></span>
 </p>
 <p>
-<button onclick='testDlx()'>Run Alnumwasm version</button>
+<button id='btnTestDlxWasm' disabled='true' onclick='testDlx()'>Run Alnumwasm version</button>
+<p>Alnumwasm code:</p>
+<pre><code id='code'>Loading...</code></pre>
+<script src='test/dlxwasm.js'></script>
 </p>
 </body>
 </html>
