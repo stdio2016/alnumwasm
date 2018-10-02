@@ -29,10 +29,10 @@ code
     get x iconst 2 iadd get y iconst 1 iadd get lv call knight brif 0
     get x iconst 2 iadd get y iconst m1 iadd get lv call knight brif 0
     get x iconst 1 iadd get y iconst m2 iadd get lv call knight brif 0
-    get x iconst m1 iadd get y iconst 2 iadd get lv call knight brif 0
-    get x iconst m2 iadd get y iconst 1 iadd get lv call knight brif 0
-    get x iconst m2 iadd get y iconst m1 iadd get lv call knight brif 0
     get x iconst m1 iadd get y iconst m2 iadd get lv call knight brif 0
+    get x iconst m2 iadd get y iconst m1 iadd get lv call knight brif 0
+    get x iconst m2 iadd get y iconst 1 iadd get lv call knight brif 0
+    get x iconst m1 iadd get y iconst 2 iadd get lv call knight brif 0
     
     ; no moves
     get pos iconst 0 istore align 4
