@@ -4,6 +4,76 @@ global sollim as mut i32
 global solpcs as mut i32
 global solpcslim as mut i32
 
+; node structure:
+;   offset 0: up
+;   offset 4: down
+;   offset 8: left
+;   offset 12: right
+;   offset 16: row
+;   offset 20: col
+;   offset 24: size
+;   offset 28: value
+;   offset 32: min
+;   offset 36: max
+
+func unlinkrow param n as i32 and includen as i32
+local e as i32 and ncol as i32
+code
+  ; e = n;
+  get n set e
+  ; n = includeN ? n : n.r;
+  get includen if
+    get n iload off 12 set n
+  end
+
+  ; while (n !== e) {
+  block lbl b loop lbl w
+    get n get e ine brif b
+    
+    ; n.u.d = n.d;
+    get n iload off 0 get n iload off 4 istore off 4
+    ; n.d.u = n.u;
+    get n iload off 4 get n iload off 0 istore off 0
+    ; n.col.size -= 1;
+    get n iload off 20 set ncol
+    get ncol get ncol iload off 24 iconst 1 isub istore off 24
+    ; n = n.r;
+    get n iload off 12 set n
+    
+  ; }
+    br w
+  end end
+end
+
+func relinkrow param n as i32 and includen as i32
+local e as i32 and ncol as i32
+code
+  ; e = n;
+  get n set e
+  ; n = includeN ? n : n.r;
+  get includen if
+    get n iload off 12 set n
+  end
+
+  ; while (n !== e) {
+  block lbl b loop lbl w
+    get n get e ine brif b
+    
+    ; n.u.d = n;
+    get n iload off 0 get n istore off 4
+    ; n.d.u = n;
+    get n iload off 4 get n istore off 0
+    ; n.col.size += 1;
+    get n iload off 20 set ncol
+    get ncol get ncol iload off 24 iconst 1 iadd istore off 24
+    ; n = n.r;
+    get n iload off 12 set n
+    
+  ; }
+    br w
+  end end
+end
+
 func dlx
 code
 end
