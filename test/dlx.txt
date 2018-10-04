@@ -28,7 +28,7 @@ code
 
   ; while (n !== e) {
   block lbl b loop lbl w
-    get n get e ine brif b
+    get n get e ieq brif b
     
     ; n.u.d = n.d;
     get n iload off 0 get n iload off 4 istore off 4
@@ -57,7 +57,7 @@ code
 
   ; while (n !== e) {
   block lbl b loop lbl w
-    get n get e ine brif b
+    get n get e ieq brif b
     
     ; n.u.d = n;
     get n iload off 0 get n istore off 4
@@ -72,6 +72,30 @@ code
   ; }
     br w
   end end
+end
+
+func uncover param n as i32
+local n2 as i32 and c2 as i32 and n3 as i32
+code
+  get n set n2
+  loop lbl do
+    get n2 iload off 8 set n2
+    get n2 iload off 20 set c2
+    get c2 iload off 28 get c2 iload off 36 ieq if
+      get c2 iload off 0 set n3
+      block lbl b loop lbl w
+        get n3 get c2 ieq brif b
+          get n3 iconst 0 call relinkrow
+          get n3 iload off 0 set n3
+        br w
+      end end
+      get c2 iload off 8 get c2 istore off 12
+      get c2 iload off 12 get c2 istore off 8
+    end
+    get c2 get c2 iload off 28 iconst 1 isub istore off 28
+    get n2 get n ieq brif do
+  end
+  get n iconst 1 call unlinkrow
 end
 
 func dlx
