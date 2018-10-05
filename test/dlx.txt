@@ -29,7 +29,7 @@ code
   get n set e
   ; n = includeN ? n : n.r;
   get includen ieqz if
-    get n iload off 12 set n
+    get n iload align 4 off 12 set n
   end
 
   ; while (n !== e) {
@@ -37,14 +37,14 @@ code
     get n get e ieq brif b
     
     ; n.u.d = n.d;
-    get n iload off 0 get n iload off 4 istore off 4
+    get n iload align 4 off 0 get n iload align 4 off 4 istore align 4 off 4
     ; n.d.u = n.u;
-    get n iload off 4 get n iload off 0 istore off 0
+    get n iload align 4 off 4 get n iload align 4 off 0 istore align 4 off 0
     ; n.col.size -= 1;
-    get n iload off 20 set ncol
-    get ncol get ncol iload off 24 iconst 1 isub istore off 24
+    get n iload align 4 off 20 set ncol
+    get ncol get ncol iload align 4 off 24 iconst 1 isub istore align 4 off 24
     ; n = n.r;
-    get n iload off 12 set n
+    get n iload align 4 off 12 set n
     
   ; }
     br w
@@ -58,7 +58,7 @@ code
   get n set e
   ; n = includeN ? n : n.r;
   get includen ieqz if
-    get n iload off 12 set n
+    get n iload align 4 off 12 set n
   end
 
   ; while (n !== e) {
@@ -66,14 +66,14 @@ code
     get n get e ieq brif b
     
     ; n.u.d = n;
-    get n iload off 0 get n istore off 4
+    get n iload align 4 off 0 get n istore align 4 off 4
     ; n.d.u = n;
-    get n iload off 4 get n istore off 0
+    get n iload align 4 off 4 get n istore align 4 off 0
     ; n.col.size += 1;
-    get n iload off 20 set ncol
-    get ncol get ncol iload off 24 iconst 1 iadd istore off 24
+    get n iload align 4 off 20 set ncol
+    get ncol get ncol iload align 4 off 24 iconst 1 iadd istore align 4 off 24
     ; n = n.r;
-    get n iload off 12 set n
+    get n iload align 4 off 12 set n
     
   ; }
     br w
@@ -83,23 +83,22 @@ end
 func cover param n as i32
 local n2 as i32 and c2 as i32 and n3 as i32
 code
-  get n iload off 16 teelocal n set n2 ; get row header
-  get n2 iload off 12 set n2
+  get n set n2
   loop lbl do
-    get n2 iload off 20 set c2
-    get c2 get c2 iload off 28 iconst 1 iadd istore off 28
-    get c2 iload off 28 get c2 iload off 36 ieq if
-      get c2 iload off 8 get c2 iload off 12 istore off 12
-      get c2 iload off 12 get c2 iload off 8 istore off 8
-      get c2 iload off 4 set n3
+    get n2 iload align 4 off 20 set c2
+    get c2 get c2 iload align 4 off 28 iconst 1 iadd istore align 4 off 28
+    get c2 iload align 4 off 28 get c2 iload align 4 off 36 ieq if
+      get c2 iload align 4 off 8 get c2 iload align 4 off 12 istore align 4 off 12
+      get c2 iload align 4 off 12 get c2 iload align 4 off 8 istore align 4 off 8
+      get c2 iload align 4 off 4 set n3
       block lbl b loop lbl w
         get n3 get c2 ieq brif b
           get n3 iconst 0 call unlinkrow
-          get n3 iload off 4 set n3
+          get n3 iload align 4 off 4 set n3
         br w
       end end
     end
-    get n2 iload off 12 set n2
+    get n2 iload align 4 off 12 set n2
     get n2 get n ine brif do
   end
 end
@@ -107,23 +106,22 @@ end
 func uncover param n as i32
 local n2 as i32 and c2 as i32 and n3 as i32
 code
-  get n iload off 16 teelocal n set n2 ; get row header
-  get n iload off 12 set n
+  get n set n2
   loop lbl do
-    get n2 iload off 8 set n2
-    get n2 iload off 20 set c2
-    get c2 iload off 28 get c2 iload off 36 ieq if
-      get c2 iload off 0 set n3
+    get n2 iload align 4 off 8 set n2
+    get n2 iload align 4 off 20 set c2
+    get c2 iload align 4 off 28 get c2 iload align 4 off 36 ieq if
+      get c2 iload align 4 off 0 set n3
       block lbl b loop lbl w
         get n3 get c2 ieq brif b
           get n3 iconst 0 call relinkrow
-          get n3 iload off 0 set n3
+          get n3 iload align 4 off 0 set n3
         br w
       end end
-      get c2 iload off 8 get c2 istore off 12
-      get c2 iload off 12 get c2 istore off 8
+      get c2 iload align 4 off 8 get c2 istore align 4 off 12
+      get c2 iload align 4 off 12 get c2 istore align 4 off 8
     end
-    get c2 get c2 iload off 28 iconst 1 isub istore off 28
+    get c2 get c2 iload align 4 off 28 iconst 1 isub istore align 4 off 28
     get n2 get n ine brif do
   end
   get n iconst 1 call unlinkrow
@@ -137,28 +135,28 @@ end
 func minfit param root as i32 result i32
 local col as i32 and c as i32 and minfit as i32 and value as i32 
 code
-  get root iload off 12 set col
+  get root iload align 4 off 12 set col
   iconst m1 set minfit
   block lbl b loop lbl w
     get col get root ieq brif b
     block lbl f2
-      get col iload off 28 set value
+      get col iload align 4 off 28 set value
       ; satisfied
-        get value get col iload off 36 iles
-        get value get col iload off 32 iges
+        get value get col iload align 4 off 36 iles
+        get value get col iload align 4 off 32 iges
       iand brif f2
       
       ; unusable
-        get value get col iload off 36 igts
-        get value get col iload off 24 iadd get col iload off 32 ilts
+        get value get col iload align 4 off 36 igts
+        get value get col iload align 4 off 24 iadd get col iload align 4 off 32 ilts
       ior if iconst m1 return end
       
-      get col iload off 24 get minfit iltu if
+      get col iload align 4 off 24 get minfit iltu if
         get col set c
-        get col iload off 24 set minfit
+        get col iload align 4 off 24 set minfit
       end
     end
-    get col iload off 12 set col
+    get col iload align 4 off 12 set col
     br w
   end end
   iconst m2 get c get minfit iconst m1 ieq select
@@ -186,42 +184,42 @@ code
       ; unusable or pop stack
       getglobal sp getglobal stack ieq brif b
       getglobal sp iconst 8 isub setglobal sp
-      getglobal sp iload off 0 set n
-      getglobal sp iload off 4 set c
+      getglobal sp iload align 4 off 0 set n
+      getglobal sp iload align 4 off 4 set c
       
       ; recover
       get n call uncover
-      get n iload off 4 set n
+      get n iload align 4 off 4 set n
     else
-      get c iload off 4 set n
+      get c iload align 4 off 4 set n
     end
     
     ; get deeper
     block lbl b2 loop lbl w2
       get n get c ine brif b2
-      get c iload off 0 set n
+      get c iload align 4 off 0 set n
       block lbl b3 loop lbl w3
         get n get c ieq brif b3
         get n iconst 1 call relinkrow
-        get n iload off 0 set n
+        get n iload align 4 off 0 set n
         br w3
       end end
       
       ; pop stack
       getglobal sp getglobal stack ieq brif b
       getglobal sp iconst 8 isub setglobal sp
-      getglobal sp iload off 0 set n
-      getglobal sp iload off 4 set c
+      getglobal sp iload align 4 off 0 set n
+      getglobal sp iload align 4 off 4 set c
       
       ; recover
       get n call uncover
-      get n iload off 4 set n
+      get n iload align 4 off 4 set n
       br w2
     end end
     
     ; push stack
-    getglobal sp get n istore off 0
-    getglobal sp get c istore off 4
+    getglobal sp get n istore align 4 off 0
+    getglobal sp get c istore align 4 off 4
     getglobal sp iconst 8 iadd setglobal sp
     get n call cover
     br w
@@ -262,64 +260,66 @@ end
 
 func setright param left as i32 and right as i32
 code
-  get left get right istore off 12
-  get right iload off 8 get left istore off 12
-  get left get right iload off 8 istore off 8
-  get right get left istore off 8
+  get left get right istore align 4 off 12
+  get right iload align 4 off 8 get left istore align 4 off 12
+  get left get right iload align 4 off 8 istore align 4 off 8
+  get right get left istore align 4 off 8
 end
 
 func setdown param up as i32 and down as i32
 code
-  get up get down istore off 4
-  get down iload off 0 get up istore off 4
-  get up get down iload off 0 istore off 0
-  get down get up istore off 0
+  get up get down istore align 4 off 4
+  get down iload align 4 off 0 get up istore align 4 off 4
+  get up get down iload align 4 off 0 istore align 4 off 0
+  get down get up istore align 4 off 0
 end
 
 func setroot export setroot param addr as i32
 code
-  get addr get addr istore off 0 ; up
-  get addr get addr istore off 4 ; down
-  get addr get addr istore off 8 ; left
-  get addr get addr istore off 12 ; right
-  get addr iconst 0 istore off 16 ; row
-  get addr iconst 0 istore off 20 ; col
+  get addr get addr istore align 4 off 0 ; up
+  get addr get addr istore align 4 off 4 ; down
+  get addr get addr istore align 4 off 8 ; left
+  get addr get addr istore align 4 off 12 ; right
+  get addr iconst 0 istore align 4 off 16 ; row
+  get addr iconst 0 istore align 4 off 20 ; col
   
-  get addr iconst 0 istore off 24 ; size
-  get addr iconst 0 istore off 28 ; value
-  get addr iconst 0 istore off 32 ; min
-  get addr iconst 0 istore off 36 ; max
+  get addr iconst 0 istore align 4 off 24 ; size
+  get addr iconst 0 istore align 4 off 28 ; value
+  get addr iconst 0 istore align 4 off 32 ; min
+  get addr iconst 0 istore align 4 off 36 ; max
 end
 
 func addrow export addrow param root as i32 and addr as i32 and id as i32
 code
   get addr get root call setdown ; up, down
-  get addr get addr istore off 8 ; left
-  get addr get addr istore off 12 ; right
-  get addr get id istore off 16 ; row
-  get addr get root istore off 20 ; col
+  get addr get addr istore align 4 off 8 ; left
+  get addr get addr istore align 4 off 12 ; right
+  get addr get id istore align 4 off 16 ; row
+  get addr get root istore align 4 off 20 ; col
 end
 
 func addcolumn export addcolumn param root as i32 and addr as i32 and id as i32
   and min as i32 and max as i32
 code
-  get addr get addr istore off 0 ; up
-  get addr get addr istore off 4 ; down
+  get addr get addr istore align 4 off 0 ; up
+  get addr get addr istore align 4 off 4 ; down
   get addr get root call setright ; left, right
-  get addr get root istore off 16 ; row
-  get addr get id istore off 20 ; col
+  get addr get root istore align 4 off 16 ; row
+  get addr get id istore align 4 off 20 ; col
   
-  get addr iconst 0 istore off 24 ; size
-  get addr iconst 0 istore off 28 ; value
-  get addr get min istore off 32 ; min
-  get addr get max istore off 36 ; max
+  get addr iconst 0 istore align 4 off 24 ; size
+  get addr iconst 0 istore align 4 off 28 ; value
+  get addr get min istore align 4 off 32 ; min
+  get addr get max istore align 4 off 36 ; max
 end
 
 func addcell export addcell param addr as i32 and row as i32 and col as i32
 code
   get addr get col call setdown ; up, down
   get addr get row call setright ; left, right
-  get addr get row istore off 16 ; row
-  get addr get col istore off 20 ; col
-  get col get col iload off 24 iconst 1 iadd istore off 24
+  get row iload align 4 off 8 get row iload align 4 off 12 istore align 4 off 12
+  get row iload align 4 off 12 get row iload align 4 off 8 istore align 4 off 8
+  get addr get row istore align 4 off 16 ; row
+  get addr get col istore align 4 off 20 ; col
+  get col get col iload align 4 off 24 iconst 1 iadd istore align 4 off 24
 end
