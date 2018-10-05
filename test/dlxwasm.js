@@ -1,5 +1,6 @@
 var dlxModule;
 var env = {};
+var solbuf;
 document.getElementById('btnTestDlxWasm').disabled = true;
 function loadScript() {
   var xhr = new XMLHttpRequest();
@@ -19,16 +20,57 @@ function gotScript(e) {
   var buf = b.compile();
   WebAssembly.compile(buf).then(asm => {
     env.mem = new WebAssembly.Memory({initial: 1});
+    solbuf = new Int32Array(env.mem.buffer);
     env.root = 0;
+    env.debug = (i,j) => console.debug('wasm', i,j);
     return WebAssembly.instantiate(asm, {env: env});
   }).then(inst => {
     dlxModule = inst;
     document.getElementById('btnTestDlxWasm').disabled = false;
+  }).catch(err => {
+    console.error(err);
   });
 }
 
 loadScript();
 
 function testDlx(lv) {
-  throw Error('unimplemented');
+  var m = new Matrix();
+  var n = 12;
+  var t = new Date();
+  dlxModule.exports.setroot(0);
+  for (var i = 0; i < n*2; i++) {
+    dlxModule.exports.addcolumn(0, (i+1)*40, i, 1, 1);
+  }
+  for (var i = 0; i < (2*n-1)*2; i++) {
+    dlxModule.exports.addcolumn(0, (i+1+n*2)*40, i+n*2, 0, 1);
+  }
+  var rowaddr = (1 + n*2 + (2*n-1)*2)*40;
+  for (var i = 0; i < n*n; i++) {
+    dlxModule.exports.addrow(0, rowaddr + i * 24, i);
+  }
+  var celladdr = rowaddr + n*n*24;
+  for (var i = 0; i < n; i++) {
+    for (var j = 0; j < n; j++) {
+      var row = rowaddr + (i*n+j) * 24;
+      var addr = celladdr + (i*n+j) * 96;
+      dlxModule.exports.addcell(addr + 0, row, (i+1)*40);
+      dlxModule.exports.addcell(addr + 24, row, (n+j+1)*40);
+      dlxModule.exports.addcell(addr + 48, row, (n*2+i+j+1)*40);
+      dlxModule.exports.addcell(addr + 72, row, (n*4-1+(i-j+n-1)+1)*40);
+    }
+  }
+  var stack = celladdr + n*n*96;
+  console.log('stack: ' + stack);
+  dlxModule.exports.setstack(stack);
+  var r = 0;
+  var cnt = 0;
+  dlxModule.exports.settry(0, 1000000);
+  do {
+    r = dlxModule.exports.dlx(0);
+    cnt++;
+  } while (r === 2) ;
+  cnt--;
+  wasmResult.innerHTML = ('solution count:' + cnt +
+    ', tried: ' + dlxModule.exports.gettried() + ', cost: ' + (new Date() - t)/1000 + 's');
 }
