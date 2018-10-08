@@ -163,6 +163,6 @@ In Alnumwasm, most tokens are case-insensitive, so `FUNC ABC RESULT I32` is the 
 
 ## Note
 
-To write this program quickly, the program doesn't validate the bytecodes, and does not check every syntax rules. It is possible to write a syntax error code that compiles.
+Because I want to write this program quickly, the program doesn't validate the bytecodes, and does not check every syntax rules. It is possible to write a syntax error code that compiles.
 
 Inspired by: https://github.com/WebAssembly/spec/tree/master/interpreter
