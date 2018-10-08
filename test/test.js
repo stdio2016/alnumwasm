@@ -2,7 +2,7 @@ var a = new AlnumWasmParser(
   "FROM 'Math' IMPORT 'random' AS FUNC rand RESULT F64\n" +
   "FROM 'env' IMPORT 'mem' AS MEMORY 0\n" +
   "FROM 'env' IMPORT 'winsize' AS GLOBAL winsize AS I32\n" +
-  "FROM 'env' IMPORT 'tbl' AS TABLE 0 AS ANYTYPE\n" +
+  "FROM 'env' IMPORT 'tbl' AS TABLE 0 AS ANYFUNC\n" +
   "TYPEDEF 2 PARAM I32 AND I32 AND I32\n" +
   "TYPEDEF drd PARAM F64 RESULT F64\n" +
   "TYPEDEF happy NOPARAM RESULT F64\n" +

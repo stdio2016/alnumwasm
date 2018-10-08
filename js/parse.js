@@ -382,10 +382,10 @@ AlnumWasmParser.prototype.parseImport = function () {
   else if (kind === "TABLE") {
     options = this.parseSizeLimit();
     if (this.lexer.next() !== "AS") {
-      throw SyntaxError('expected AS, found ' + this.lexer.token);
+      throw SyntaxError('expected table type "AS ANYFUNC", found ' + this.lexer.token);
     }
-    if (this.lexer.next() !== "ANYTYPE") {
-      throw SyntaxError('table type must be ANYTYPE');
+    if (this.lexer.next() !== "ANYFUNC") {
+      throw SyntaxError('table type must be ANYFUNC');
     }
   }
   else if (kind === "GLOBAL") {
@@ -402,12 +402,12 @@ AlnumWasmParser.prototype.parseTable = function () {
   this.parseInlineExport('TABLE', name);
   var lim = this.parseSizeLimit();
   if (this.lexer.next() !== "AS") {
-    throw SyntaxError('expected AS, found ' + this.lexer.token);
+    throw SyntaxError('expected table type "AS ANYFUNC", found ' + this.lexer.token);
   }
-  if (this.lexer.next() !== "ANYTYPE") {
-    throw SyntaxError('table type must be ANYTYPE');
+  if (this.lexer.next() !== "ANYFUNC") {
+    throw SyntaxError('table type must be ANYFUNC');
   }
-  return [name, lim, 'anytype'];
+  return [name, lim, 'anyfunc'];
 };
 
 AlnumWasmParser.prototype.parseMemory = function () {
