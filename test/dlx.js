@@ -1,3 +1,4 @@
+// inspired by https://github.com/jlaire/dlx.js
 function MatrixNode(row, col) {
   this.u = this;
   this.d = this;
@@ -108,10 +109,6 @@ Matrix.prototype.relinkColumn = function (n) {
 };
 
 Matrix.prototype.dlx = function () {
-  this.drc = 0;
-  this.dcc = 0;
-  this.deletedRow = [];
-  this.deletedCol = [];
   this.choice = [];
   this.solution = [];
   this.tried = 0;
