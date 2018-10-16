@@ -76,21 +76,10 @@ AlnumWasmParser.prototype.parseExpr = function () {
     }
     else if (op === OpCodes.BR || op === OpCodes.BRIF) {
       var name = this.lexer.next();
-      var lv;
-      if (onlyDigits(name)) {
-        lv = parseInt(name);
-      }
-      else {
-        lv = this.labelNames[name];
-        if (lv === void 0) {
-          throw ReferenceError("label " + name + " is not defined");
-        }
-        else lv = this.scope.length - lv;
-      }
-      AlnumWasmParser.writeUint(lv, this.code);
+      AlnumWasmParser.writeUint(this.labelToLevel(name), this.code);
     }
     else if (op === OpCodes.BRTABLE) {
-      
+      this.parseBrTable();
     }
     else if (op === OpCodes.CALL) {
       var name = this.lexer.next();
@@ -222,6 +211,36 @@ AlnumWasmParser.prototype.parseFloat = function (isDouble) {
     d = dv.getUint32(0, true);
     this.code.push(d & 0xff, d>>8 & 0xff, d>>16 & 0xff, d>>24 & 0xff);
   }
+};
+
+AlnumWasmParser.prototype.labelToLevel = function (name) {
+  var lv;
+  if (onlyDigits(name)) {
+    lv = parseInt(name);
+  }
+  else {
+    lv = this.labelNames[name];
+    if (lv === void 0) {
+      throw ReferenceError("label " + name + " is not defined");
+    }
+    else lv = this.scope.length - lv;
+  }
+  return lv;
+};
+
+AlnumWasmParser.prototype.parseBrTable = function () {
+  var name = this.lexer.next();
+  var lbls = [];
+  while (name !== "ELSE") {
+    lbls.push(this.labelToLevel(name));
+    name = this.lexer.next();
+  }
+  name = this.lexer.next();
+  AlnumWasmParser.writeUint(lbls.length, this.code);
+  for (var i = 0; i < lbls.length; i++) {
+    AlnumWasmParser.writeUint(lbls[i], this.code);
+  }
+  AlnumWasmParser.writeUint(this.labelToLevel(name), this.code);
 };
 
 AlnumWasmParser.prototype.parseName = function (kind) {

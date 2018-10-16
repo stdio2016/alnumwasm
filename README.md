@@ -70,7 +70,7 @@ op:
   nop
   br <name>
   brif <name>
-    ;; TODO: brtable
+  brtable <name>* else <name>
   return
   call <name>
   (callindirect | callind) <functype>
