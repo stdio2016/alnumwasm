@@ -53,6 +53,46 @@ AlnumWasmParser.writeUint = function (n, code) {
   code.push(n);
 };
 
+AlnumWasmParser.parseLongInt = function (str) {
+  var hi = 0, lo = 0, sign = 1;
+  if (str[0] === "M") {
+    sign = -1;
+    str = str.substring(1);
+  }
+  if (str.substring(0,2) === "0X") {
+    // hex
+    for (var i = 2; i < str.length; i++) {
+      var asc = str.charCodeAt(i);
+      hi = (hi << 4) | (lo>>>28);
+      if (asc >= 48 && asc < 58) {
+        lo = (lo << 4) | (asc - 48);
+      }
+      else if (asc >= 65 && asc <= 70) {
+        lo = (lo << 4) | (asc - 55);
+      }
+    }
+  }
+  else {
+    // decimal
+    var two32 = -(1<<31)*2;
+    for (var i = 0; i < str.length; i++) {
+      var asc = str.charCodeAt(i);
+      if (asc >= 48 && asc < 58) {
+        lo = lo * 10 + (asc - 48);
+        hi = hi * 10 + Math.floor(lo / two32);
+        lo >>>= 0;
+      }
+    }
+  }
+  if (sign === -1) {
+    if (lo === 0) hi = -hi|0;
+    else hi = ~hi;
+    lo = -lo;
+  }
+  lo >>>= 0;
+  return [hi, lo];
+};
+
 AlnumWasmParser.prototype.parseExpr = function () {
   this.scope = [];
   this.labelNames = {};
