@@ -22,31 +22,25 @@ from env import debug as func debug param i32 and i32
 ;   offset 32: min
 ;   offset 36: max
 
-func unlinkrow param n as i32 and includen as i32
-local e as i32 and ncol as i32
+func unlinkrow param node as i32 and includen as i32
+local n as i32 and ncol as i32 and up as i32 and down as i32
 code
   ; e = n;
-  get n set e
+  get node set n
   ; n = includeN ? n : n.r;
   get includen ieqz if
     get n iload align 4 off 12 set n
   end
 
-  ; while (n !== e) {
   block lbl b loop lbl w
-    get n get e ieq brif b
-    
-    ; n.u.d = n.d;
-    get n iload align 4 off 0 get n iload align 4 off 4 istore align 4 off 4
-    ; n.d.u = n.u;
-    get n iload align 4 off 4 get n iload align 4 off 0 istore align 4 off 0
-    ; n.col.size -= 1;
+    get n get node ieq brif b
+    get n iload align 4 off 0 set up
+    get n iload align 4 off 4 set down
+    get up get down istore align 4 off 4
+    get down get up istore align 4 off 0
     get n iload align 4 off 20 set ncol
-    get ncol get ncol iload align 4 off 24 iconst 1 isub istore align 4 off 24
-    ; n = n.r;
     get n iload align 4 off 12 set n
-    
-  ; }
+    get ncol get ncol iload align 4 off 24 iconst 1 isub istore off 24
     br w
   end end
 end
@@ -129,11 +123,12 @@ end
 
 func addsolution result i32
 code
+  getglobal sol iconst 1 iadd setglobal sol
   iconst 1
 end
 
 func minfit param root as i32 result i32
-local col as i32 and c as i32 and minfit as i32 and value as i32 
+local col as i32 and c as i32 and minfit as i32 and value as i32 and min as i32 and size as i32
 code
   get root iload align 4 off 12 set col
   iconst m1 set minfit
@@ -142,18 +137,18 @@ code
     block lbl f2
       get col iload align 4 off 28 set value
       ; satisfied
-        get value get col iload align 4 off 36 iles
-        get value get col iload align 4 off 32 iges
-      iand brif f2
+      get value get col iload align 4 off 36 igts if
+        iconst m1 return
+      end
+      get value get col iload align 4 off 32 teelocal min iges brif f2
       
       ; unusable
-        get value get col iload align 4 off 36 igts
-        get value get col iload align 4 off 24 iadd get col iload align 4 off 32 ilts
-      ior if iconst m1 return end
+      get value get col iload align 4 off 24 teelocal size iadd get min ilts
+      if iconst m1 return end
       
-      get col iload align 4 off 24 get minfit iltu if
+      get size get minfit iltu if
         get col set c
-        get col iload align 4 off 24 set minfit
+        get size set minfit
       end
     end
     get col iload align 4 off 12 set col
