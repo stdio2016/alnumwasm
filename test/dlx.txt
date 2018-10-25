@@ -23,7 +23,7 @@ from env import debug as func debug param i32 and i32
 ;   offset 36: max
 
 func unlinkrow param node as i32 and includen as i32
-local n as i32 and ncol as i32 and up as i32 and down as i32
+local n as i32 and ncol as i32 and up as i32 and down as i32 and updown as i64 and l32 as i64
 code
   ; e = n;
   get node set n
@@ -31,11 +31,15 @@ code
   get includen ieqz if
     get n iload align 4 off 12 set n
   end
+iconst 32 ui2l set l32
 
   block lbl b loop lbl w
     get n get node ieq brif b
-    get n iload align 4 off 0 set up
-    get n iload align 4 off 4 set down
+    ;get n iload align 4 off 0 set up
+    ;get n iload align 4 off 4 set down
+get n lload align 8 set updown
+get updown l2i set up
+get updown get l32 lshru l2i set down
     get up get down istore align 4 off 4
     get down get up istore align 4 off 0
     get n iload align 4 off 20 set ncol
@@ -46,7 +50,7 @@ code
 end
 
 func relinkrow param n as i32 and includen as i32
-local e as i32 and ncol as i32
+local e as i32 and ncol as i32 and some as i64 and l32 as i64
 code
   ; e = n;
   get n set e
@@ -54,15 +58,19 @@ code
   get includen ieqz if
     get n iload align 4 off 12 set n
   end
+iconst 32 ui2l set l32
 
   ; while (n !== e) {
   block lbl b loop lbl w
     get n get e ieq brif b
     
     ; n.u.d = n;
-    get n iload align 4 off 0 get n istore align 4 off 4
+    ;get n iload align 4 off 0 get n istore align 4 off 4
     ; n.d.u = n;
-    get n iload align 4 off 4 get n istore align 4 off 0
+    ;get n iload align 4 off 4 get n istore align 4 off 0
+get n lload align 8 set some
+get some l2i get n istore align 4 off 4
+get some get l32 lshru l2i get n istore align 4 off 0
     ; n.col.size += 1;
     get n iload align 4 off 20 set ncol
     get ncol get ncol iload align 4 off 24 iconst 1 iadd istore align 4 off 24
@@ -80,8 +88,8 @@ code
   get n set n2
   loop lbl do
     get n2 iload align 4 off 20 set c2
-    get c2 get c2 iload align 4 off 28 iconst 1 iadd istore align 4 off 28
-    get c2 iload align 4 off 28 get c2 iload align 4 off 36 ieq if
+    get c2 get c2 iload align 4 off 28 iconst 1 iadd teelocal n3 istore align 4 off 28
+    get n3 get c2 iload align 4 off 36 ieq if
       get c2 iload align 4 off 8 get c2 iload align 4 off 12 istore align 4 off 12
       get c2 iload align 4 off 12 get c2 iload align 4 off 8 istore align 4 off 8
       get c2 iload align 4 off 4 set n3
@@ -98,13 +106,13 @@ code
 end
 
 func uncover param n as i32
-local n2 as i32 and c2 as i32 and n3 as i32
+local n2 as i32 and c2 as i32 and n3 as i32 and size as i32
 code
   get n set n2
   loop lbl do
     get n2 iload align 4 off 8 set n2
     get n2 iload align 4 off 20 set c2
-    get c2 iload align 4 off 28 get c2 iload align 4 off 36 ieq if
+    get c2 iload align 4 off 28 teelocal size get c2 iload align 4 off 36 ieq if
       get c2 iload align 4 off 0 set n3
       block lbl b loop lbl w
         get n3 get c2 ieq brif b
@@ -115,7 +123,7 @@ code
       get c2 iload align 4 off 8 get c2 istore align 4 off 12
       get c2 iload align 4 off 12 get c2 istore align 4 off 8
     end
-    get c2 get c2 iload align 4 off 28 iconst 1 isub istore align 4 off 28
+    get c2 get size iconst 1 isub istore align 4 off 28
     get n2 get n ine brif do
   end
   get n iconst 1 call unlinkrow
@@ -137,9 +145,9 @@ code
     block lbl f2
       get col iload align 4 off 28 set value
       ; satisfied
-      get value get col iload align 4 off 36 igts if
-        iconst m1 return
-      end
+      ;get value get col iload align 4 off 36 igts if
+      ;  iconst m1 return
+      ;end
       get value get col iload align 4 off 32 teelocal min iges brif f2
       
       ; unusable
