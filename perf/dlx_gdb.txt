@@ -1,0 +1,921 @@
+using Firefox 62.0.3 64 bit on Ubuntu 18.04
+
+info registers
+rbp            0x7fffffff9708	0x7fffffff9708
+rsp            0x7fffffff9708	0x7fffffff9708
+
+r12            0x7fffffff9760	140737488328544  ; ???
+r13            0x7fffc6b59428	140736527176744  ; ???
+r14            0x7fffd19da000	140736710156288  ; pointer to global variables
+r15            0x7ffb45d69000	140717185208320  ; pointer to linear memory
+
+Dump of assembler code from 0x2e498e2c6000 to 0x2e498e2c69ef:
+; trampoline for imported func debug
+   0x00002e498e2c6000:	cmp    $0x9,%ebx
+   0x00002e498e2c6003:	je     0x2e498e2c6010
+   0x00002e498e2c6009:	ud2    
+   0x00002e498e2c600b:	nopl   0x0(%rax,%rax,1)
+
+; imported func debug
+   0x00002e498e2c6010:	push   %r14
+   0x00002e498e2c6012:	push   %rbp
+   0x00002e498e2c6013:	mov    %rsp,%rbp
+   0x00002e498e2c6016:	sub    $0x8,%rsp
+   0x00002e498e2c601a:	cmp    %rsp,0x18(%r14)
+   0x00002e498e2c601e:	jb     0x2e498e2c6026
+   0x00002e498e2c6024:	ud2    
+   0x00002e498e2c6026:	mov    0x40(%r14),%rax
+   0x00002e498e2c602a:	mov    0x48(%r14),%r14
+   0x00002e498e2c602e:	mov    (%r14),%r15
+   0x00002e498e2c6031:	callq  *%rax
+   0x00002e498e2c6033:	mov    0x10(%rsp),%r14
+   0x00002e498e2c6038:	mov    (%r14),%r15
+   0x00002e498e2c603b:	add    $0x8,%rsp
+   0x00002e498e2c603f:	pop    %rbp
+   0x00002e498e2c6040:	pop    %r14
+   0x00002e498e2c6042:	retq   
+; end of imported func debug
+
+   0x00002e498e2c6043:	ud2    
+   0x00002e498e2c6045:	hlt    
+   0x00002e498e2c6046:	hlt    
+   0x00002e498e2c6047:	hlt    
+   0x00002e498e2c6048:	hlt    
+   0x00002e498e2c6049:	hlt    
+   0x00002e498e2c604a:	hlt    
+   0x00002e498e2c604b:	hlt    
+   0x00002e498e2c604c:	hlt    
+   0x00002e498e2c604d:	hlt    
+   0x00002e498e2c604e:	hlt    
+   0x00002e498e2c604f:	hlt    
+
+; trampoline for func unlinkrow
+   0x00002e498e2c6050:	cmp    $0x9,%ebx
+   0x00002e498e2c6053:	je     0x2e498e2c6060
+   0x00002e498e2c6059:	ud2    
+   0x00002e498e2c605b:	nopl   0x0(%rax,%rax,1)
+
+; func unlinkrow
+   0x00002e498e2c6060:	push   %r14
+   0x00002e498e2c6062:	push   %rbp
+   0x00002e498e2c6063:	mov    %rsp,%rbp
+   0x00002e498e2c6066:	test   %esi,%esi
+   0x00002e498e2c6068:	jne    0x2e498e2c6078
+   0x00002e498e2c606e:	mov    0xc(%r15,%rdi,1),%eax
+   0x00002e498e2c6073:	jmpq   0x2e498e2c607a
+   0x00002e498e2c6078:	mov    %edi,%eax
+   0x00002e498e2c607a:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c607f:	je     0x2e498e2c6087
+   0x00002e498e2c6085:	ud2    
+   0x00002e498e2c6087:	cmp    %edi,%eax
+   0x00002e498e2c6089:	je     0x2e498e2c60bd
+   0x00002e498e2c608f:	mov    (%r15,%rax,1),%rdx
+   0x00002e498e2c6093:	mov    %edx,%ecx
+   0x00002e498e2c6095:	shr    $0x20,%rdx
+   0x00002e498e2c6099:	mov    %edx,%edx
+   0x00002e498e2c609b:	mov    %edx,0x4(%r15,%rcx,1)
+   0x00002e498e2c60a0:	mov    %ecx,(%r15,%rdx,1)
+   0x00002e498e2c60a4:	mov    0x14(%r15,%rax,1),%ecx
+   0x00002e498e2c60a9:	mov    0xc(%r15,%rax,1),%eax
+   0x00002e498e2c60ae:	mov    0x18(%r15,%rcx,1),%edx
+   0x00002e498e2c60b3:	sub    $0x1,%edx
+   0x00002e498e2c60b6:	mov    %edx,0x18(%r15,%rcx,1)
+   0x00002e498e2c60bb:	jmp    0x2e498e2c607a
+   0x00002e498e2c60bd:	pop    %rbp
+   0x00002e498e2c60be:	pop    %r14
+   0x00002e498e2c60c0:	retq   
+; end of func unlinkrow
+
+   0x00002e498e2c60c1:	hlt    
+   0x00002e498e2c60c2:	hlt    
+   0x00002e498e2c60c3:	hlt    
+   0x00002e498e2c60c4:	hlt    
+   0x00002e498e2c60c5:	hlt    
+   0x00002e498e2c60c6:	hlt    
+   0x00002e498e2c60c7:	hlt    
+   0x00002e498e2c60c8:	hlt    
+   0x00002e498e2c60c9:	hlt    
+   0x00002e498e2c60ca:	hlt    
+   0x00002e498e2c60cb:	hlt    
+   0x00002e498e2c60cc:	hlt    
+   0x00002e498e2c60cd:	hlt    
+   0x00002e498e2c60ce:	hlt    
+   0x00002e498e2c60cf:	hlt    
+
+; trampoline for func relinkrow
+   0x00002e498e2c60d0:	cmp    $0x9,%ebx
+   0x00002e498e2c60d3:	je     0x2e498e2c60e0
+   0x00002e498e2c60d9:	ud2    
+   0x00002e498e2c60db:	nopl   0x0(%rax,%rax,1)
+
+; func relinkrow
+   0x00002e498e2c60e0:	push   %r14
+   0x00002e498e2c60e2:	push   %rbp
+   0x00002e498e2c60e3:	mov    %rsp,%rbp
+   0x00002e498e2c60e6:	test   %esi,%esi
+   0x00002e498e2c60e8:	jne    0x2e498e2c60f8
+   0x00002e498e2c60ee:	mov    0xc(%r15,%rdi,1),%eax
+   0x00002e498e2c60f3:	jmpq   0x2e498e2c60fa
+   0x00002e498e2c60f8:	mov    %edi,%eax
+   0x00002e498e2c60fa:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c60ff:	je     0x2e498e2c6107
+   0x00002e498e2c6105:	ud2    
+   0x00002e498e2c6107:	cmp    %edi,%eax
+   0x00002e498e2c6109:	je     0x2e498e2c613d
+   0x00002e498e2c610f:	mov    (%r15,%rax,1),%rcx
+   0x00002e498e2c6113:	mov    %ecx,%edx
+   0x00002e498e2c6115:	mov    %eax,0x4(%r15,%rdx,1)
+   0x00002e498e2c611a:	shr    $0x20,%rcx
+   0x00002e498e2c611e:	mov    %ecx,%ecx
+   0x00002e498e2c6120:	mov    %eax,(%r15,%rcx,1)
+   0x00002e498e2c6124:	mov    0x14(%r15,%rax,1),%ecx
+   0x00002e498e2c6129:	mov    0x18(%r15,%rcx,1),%edx
+   0x00002e498e2c612e:	add    $0x1,%edx
+   0x00002e498e2c6131:	mov    %edx,0x18(%r15,%rcx,1)
+   0x00002e498e2c6136:	mov    0xc(%r15,%rax,1),%eax
+   0x00002e498e2c613b:	jmp    0x2e498e2c60fa
+   0x00002e498e2c613d:	pop    %rbp
+   0x00002e498e2c613e:	pop    %r14
+   0x00002e498e2c6140:	retq   
+; end of func relinkrow
+
+   0x00002e498e2c6141:	hlt    
+   0x00002e498e2c6142:	hlt    
+   0x00002e498e2c6143:	hlt    
+   0x00002e498e2c6144:	hlt    
+   0x00002e498e2c6145:	hlt    
+   0x00002e498e2c6146:	hlt    
+   0x00002e498e2c6147:	hlt    
+   0x00002e498e2c6148:	hlt    
+   0x00002e498e2c6149:	hlt    
+   0x00002e498e2c614a:	hlt    
+   0x00002e498e2c614b:	hlt    
+   0x00002e498e2c614c:	hlt    
+   0x00002e498e2c614d:	hlt    
+   0x00002e498e2c614e:	hlt    
+   0x00002e498e2c614f:	hlt    
+
+; trampoline for func cover
+   0x00002e498e2c6150:	cmp    $0x5,%ebx
+   0x00002e498e2c6153:	je     0x2e498e2c6160
+   0x00002e498e2c6159:	ud2    
+   0x00002e498e2c615b:	nopl   0x0(%rax,%rax,1)
+
+; func cover
+   0x00002e498e2c6160:	push   %r14
+   0x00002e498e2c6162:	push   %rbp
+   0x00002e498e2c6163:	mov    %rsp,%rbp
+   0x00002e498e2c6166:	sub    $0x18,%rsp
+   0x00002e498e2c616a:	cmp    %rsp,0x18(%r14)
+   0x00002e498e2c616e:	jb     0x2e498e2c6176
+   0x00002e498e2c6174:	ud2    
+   0x00002e498e2c6176:	mov    %edi,0x14(%rsp)
+   0x00002e498e2c617a:	mov    0x14(%rsp),%r11d
+   0x00002e498e2c617f:	mov    %r11d,0x10(%rsp)
+   0x00002e498e2c6184:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c6189:	je     0x2e498e2c6191
+   0x00002e498e2c618f:	ud2    
+   0x00002e498e2c6191:	mov    0x10(%rsp),%eax
+   0x00002e498e2c6195:	mov    0x14(%r15,%rax,1),%eax
+   0x00002e498e2c619a:	mov    %eax,0xc(%rsp)
+   0x00002e498e2c619e:	mov    0x1c(%r15,%rax,1),%ecx
+   0x00002e498e2c61a3:	add    $0x1,%ecx
+   0x00002e498e2c61a6:	mov    %ecx,0x1c(%r15,%rax,1)
+   0x00002e498e2c61ab:	mov    0x24(%r15,%rax,1),%edx
+   0x00002e498e2c61b0:	cmp    %edx,%ecx
+   0x00002e498e2c61b2:	jne    0x2e498e2c6219
+   0x00002e498e2c61b8:	mov    0x8(%r15,%rax,1),%ecx
+   0x00002e498e2c61bd:	mov    0xc(%r15,%rax,1),%edx
+   0x00002e498e2c61c2:	mov    %edx,0xc(%r15,%rcx,1)
+   0x00002e498e2c61c7:	mov    0xc(%r15,%rax,1),%ecx
+   0x00002e498e2c61cc:	mov    0x8(%r15,%rax,1),%edx
+   0x00002e498e2c61d1:	mov    %edx,0x8(%r15,%rcx,1)
+   0x00002e498e2c61d6:	mov    0x4(%r15,%rax,1),%eax
+   0x00002e498e2c61db:	mov    %eax,0x8(%rsp)
+   0x00002e498e2c61df:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c61e4:	je     0x2e498e2c61ec
+   0x00002e498e2c61ea:	ud2    
+   0x00002e498e2c61ec:	mov    0x8(%rsp),%edi
+   0x00002e498e2c61f0:	cmp    0xc(%rsp),%edi
+   0x00002e498e2c61f4:	je     0x2e498e2c6210
+   0x00002e498e2c61fa:	xor    %esi,%esi
+   0x00002e498e2c61fc:	callq  0x2e498e2c6060          ; unlinkrow
+   0x00002e498e2c6201:	mov    0x8(%rsp),%eax
+   0x00002e498e2c6205:	mov    0x4(%r15,%rax,1),%eax
+   0x00002e498e2c620a:	mov    %eax,0x8(%rsp)
+   0x00002e498e2c620e:	jmp    0x2e498e2c61df
+   0x00002e498e2c6210:	mov    0x10(%rsp),%eax
+   0x00002e498e2c6214:	jmpq   0x2e498e2c621d
+   0x00002e498e2c6219:	mov    0x10(%rsp),%eax
+   0x00002e498e2c621d:	mov    0xc(%r15,%rax,1),%eax
+   0x00002e498e2c6222:	mov    %eax,0x10(%rsp)
+   0x00002e498e2c6226:	cmp    0x14(%rsp),%eax
+   0x00002e498e2c622a:	jne    0x2e498e2c6184
+   0x00002e498e2c6230:	add    $0x18,%rsp
+   0x00002e498e2c6234:	pop    %rbp
+   0x00002e498e2c6235:	pop    %r14
+   0x00002e498e2c6237:	retq   
+; end of func cover
+
+   0x00002e498e2c6238:	hlt    
+   0x00002e498e2c6239:	hlt    
+   0x00002e498e2c623a:	hlt    
+   0x00002e498e2c623b:	hlt    
+   0x00002e498e2c623c:	hlt    
+   0x00002e498e2c623d:	hlt    
+   0x00002e498e2c623e:	hlt    
+   0x00002e498e2c623f:	hlt    
+
+; trampoline for func uncover
+   0x00002e498e2c6240:	cmp    $0x5,%ebx
+   0x00002e498e2c6243:	je     0x2e498e2c6250
+   0x00002e498e2c6249:	ud2    
+   0x00002e498e2c624b:	nopl   0x0(%rax,%rax,1)
+
+; func uncover
+   0x00002e498e2c6250:	push   %r14
+   0x00002e498e2c6252:	push   %rbp
+   0x00002e498e2c6253:	mov    %rsp,%rbp
+   0x00002e498e2c6256:	sub    $0x28,%rsp
+   0x00002e498e2c625a:	cmp    %rsp,0x18(%r14)
+   0x00002e498e2c625e:	jb     0x2e498e2c6266
+   0x00002e498e2c6264:	ud2    
+   0x00002e498e2c6266:	mov    %edi,0x24(%rsp)
+   0x00002e498e2c626a:	mov    0x24(%rsp),%r11d
+   0x00002e498e2c626f:	mov    %r11d,0x20(%rsp)
+   0x00002e498e2c6274:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c6279:	je     0x2e498e2c6281
+   0x00002e498e2c627f:	ud2    
+   0x00002e498e2c6281:	mov    0x20(%rsp),%eax
+   0x00002e498e2c6285:	mov    0x8(%r15,%rax,1),%eax
+   0x00002e498e2c628a:	mov    %eax,0x20(%rsp)
+   0x00002e498e2c628e:	mov    0x14(%r15,%rax,1),%eax
+   0x00002e498e2c6293:	mov    %eax,0x1c(%rsp)
+   0x00002e498e2c6297:	mov    0x1c(%r15,%rax,1),%ecx
+   0x00002e498e2c629c:	mov    %ecx,0x18(%rsp)
+   0x00002e498e2c62a0:	mov    0x24(%r15,%rax,1),%edx
+   0x00002e498e2c62a5:	cmp    %edx,%ecx
+   0x00002e498e2c62a7:	jne    0x2e498e2c6306
+   0x00002e498e2c62ad:	mov    (%r15,%rax,1),%eax
+   0x00002e498e2c62b1:	mov    %eax,0x14(%rsp)
+   0x00002e498e2c62b5:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c62ba:	je     0x2e498e2c62c2
+   0x00002e498e2c62c0:	ud2    
+   0x00002e498e2c62c2:	mov    0x14(%rsp),%edi
+   0x00002e498e2c62c6:	cmp    0x1c(%rsp),%edi
+   0x00002e498e2c62ca:	je     0x2e498e2c62e5
+   0x00002e498e2c62d0:	xor    %esi,%esi
+   0x00002e498e2c62d2:	callq  0x2e498e2c60e0          ; relinkrow
+   0x00002e498e2c62d7:	mov    0x14(%rsp),%eax
+   0x00002e498e2c62db:	mov    (%r15,%rax,1),%eax
+   0x00002e498e2c62df:	mov    %eax,0x14(%rsp)
+   0x00002e498e2c62e3:	jmp    0x2e498e2c62b5
+   0x00002e498e2c62e5:	mov    0x1c(%rsp),%eax
+   0x00002e498e2c62e9:	mov    0x8(%r15,%rax,1),%ecx
+   0x00002e498e2c62ee:	mov    %eax,0xc(%r15,%rcx,1)
+   0x00002e498e2c62f3:	mov    0xc(%r15,%rax,1),%ecx
+   0x00002e498e2c62f8:	mov    %eax,0x8(%r15,%rcx,1)
+   0x00002e498e2c62fd:	mov    0x18(%rsp),%ecx
+   0x00002e498e2c6301:	jmpq   0x2e498e2c630a
+   0x00002e498e2c6306:	mov    0x18(%rsp),%ecx
+   0x00002e498e2c630a:	sub    $0x1,%ecx
+   0x00002e498e2c630d:	mov    %ecx,0x1c(%r15,%rax,1)
+   0x00002e498e2c6312:	mov    0x20(%rsp),%eax
+   0x00002e498e2c6316:	cmp    0x24(%rsp),%eax
+   0x00002e498e2c631a:	jne    0x2e498e2c6274
+   0x00002e498e2c6320:	mov    $0x1,%esi
+   0x00002e498e2c6325:	mov    0x24(%rsp),%edi
+   0x00002e498e2c6329:	callq  0x2e498e2c6060          ; unlinkrow
+   0x00002e498e2c632e:	add    $0x28,%rsp
+   0x00002e498e2c6332:	pop    %rbp
+   0x00002e498e2c6333:	pop    %r14
+   0x00002e498e2c6335:	retq   
+; end of func uncover
+
+   0x00002e498e2c6336:	hlt    
+   0x00002e498e2c6337:	hlt    
+   0x00002e498e2c6338:	hlt    
+   0x00002e498e2c6339:	hlt    
+   0x00002e498e2c633a:	hlt    
+   0x00002e498e2c633b:	hlt    
+   0x00002e498e2c633c:	hlt    
+   0x00002e498e2c633d:	hlt    
+   0x00002e498e2c633e:	hlt    
+   0x00002e498e2c633f:	hlt    
+
+; trampoline for func addsolution
+   0x00002e498e2c6340:	cmp    $0x3,%ebx
+   0x00002e498e2c6343:	je     0x2e498e2c6350
+   0x00002e498e2c6349:	ud2    
+   0x00002e498e2c634b:	nopl   0x0(%rax,%rax,1)
+
+; func addsolution
+   0x00002e498e2c6350:	push   %r14
+   0x00002e498e2c6352:	push   %rbp
+   0x00002e498e2c6353:	mov    %rsp,%rbp
+   0x00002e498e2c6356:	mov    0x60(%r14),%eax
+   0x00002e498e2c635a:	add    $0x1,%eax
+   0x00002e498e2c635d:	mov    %eax,0x60(%r14)
+   0x00002e498e2c6361:	mov    $0x1,%eax
+   0x00002e498e2c6366:	pop    %rbp
+   0x00002e498e2c6367:	pop    %r14
+   0x00002e498e2c6369:	retq   
+; end of func addsolution
+
+   0x00002e498e2c636a:	hlt    
+   0x00002e498e2c636b:	hlt    
+   0x00002e498e2c636c:	hlt    
+   0x00002e498e2c636d:	hlt    
+   0x00002e498e2c636e:	hlt    
+   0x00002e498e2c636f:	hlt    
+
+; trampoline for func minfit
+   0x00002e498e2c6370:	cmp    $0x23,%ebx
+   0x00002e498e2c6373:	je     0x2e498e2c6380
+   0x00002e498e2c6379:	ud2    
+   0x00002e498e2c637b:	nopl   0x0(%rax,%rax,1)
+
+; func minfit
+   0x00002e498e2c6380:	push   %r14
+   0x00002e498e2c6382:	push   %rbp
+   0x00002e498e2c6383:	mov    %rsp,%rbp
+   0x00002e498e2c6386:	mov    0xc(%r15,%rdi,1),%ecx
+   0x00002e498e2c638b:	xor    %r9d,%r9d
+   0x00002e498e2c638e:	mov    $0xffffffff,%edx
+   0x00002e498e2c6393:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c6398:	je     0x2e498e2c63a0
+   0x00002e498e2c639e:	ud2    
+   0x00002e498e2c63a0:	cmp    %edi,%ecx
+   0x00002e498e2c63a2:	je     0x2e498e2c63f0
+   0x00002e498e2c63a8:	mov    0x1c(%r15,%rcx,1),%esi
+   0x00002e498e2c63ad:	mov    0x20(%r15,%rcx,1),%r8d
+   0x00002e498e2c63b2:	cmp    %r8d,%esi
+   0x00002e498e2c63b5:	jge    0x2e498e2c63df
+   0x00002e498e2c63bb:	mov    0x18(%r15,%rcx,1),%ebx
+   0x00002e498e2c63c0:	add    %ebx,%esi
+   0x00002e498e2c63c2:	cmp    %r8d,%esi
+   0x00002e498e2c63c5:	jl     0x2e498e2c63e6
+   0x00002e498e2c63cb:	cmp    %edx,%ebx
+   0x00002e498e2c63cd:	jae    0x2e498e2c63db
+   0x00002e498e2c63d3:	mov    %ecx,%r9d
+   0x00002e498e2c63d6:	jmpq   0x2e498e2c63dd
+   0x00002e498e2c63db:	mov    %edx,%ebx
+   0x00002e498e2c63dd:	mov    %ebx,%edx
+   0x00002e498e2c63df:	mov    0xc(%r15,%rcx,1),%ecx
+   0x00002e498e2c63e4:	jmp    0x2e498e2c6393
+   0x00002e498e2c63e6:	mov    $0xffffffff,%eax
+   0x00002e498e2c63eb:	jmpq   0x2e498e2c6404
+   0x00002e498e2c63f0:	cmp    $0xffffffff,%edx
+   0x00002e498e2c63f3:	sete   %cl
+   0x00002e498e2c63f6:	movzbl %cl,%ecx
+   0x00002e498e2c63f9:	mov    $0xfffffffe,%eax
+   0x00002e498e2c63fe:	test   %ecx,%ecx
+   0x00002e498e2c6400:	cmove  %r9d,%eax
+   0x00002e498e2c6404:	pop    %rbp
+   0x00002e498e2c6405:	pop    %r14
+   0x00002e498e2c6407:	retq   
+; end of func minfit
+
+   0x00002e498e2c6408:	hlt    
+   0x00002e498e2c6409:	hlt    
+   0x00002e498e2c640a:	hlt    
+   0x00002e498e2c640b:	hlt    
+   0x00002e498e2c640c:	hlt    
+   0x00002e498e2c640d:	hlt    
+   0x00002e498e2c640e:	hlt    
+   0x00002e498e2c640f:	hlt    
+
+; trampoline for func dlx
+   0x00002e498e2c6410:	cmp    $0x23,%ebx
+   0x00002e498e2c6413:	je     0x2e498e2c6420
+   0x00002e498e2c6419:	ud2    
+   0x00002e498e2c641b:	nopl   0x0(%rax,%rax,1)
+
+; func dlx
+   0x00002e498e2c6420:	push   %r14
+   0x00002e498e2c6422:	push   %rbp
+   0x00002e498e2c6423:	mov    %rsp,%rbp
+   0x00002e498e2c6426:	sub    $0x18,%rsp
+   0x00002e498e2c642a:	cmp    %rsp,0x18(%r14)
+   0x00002e498e2c642e:	jb     0x2e498e2c6436
+   0x00002e498e2c6434:	ud2    
+   0x00002e498e2c6436:	mov    %edi,0x14(%rsp)
+   0x00002e498e2c643a:	xor    %eax,%eax
+   0x00002e498e2c643c:	mov    %eax,0x10(%rsp)
+   0x00002e498e2c6440:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c6445:	je     0x2e498e2c644d
+   0x00002e498e2c644b:	ud2    
+   0x00002e498e2c644d:	mov    0x10(%rsp),%eax
+   0x00002e498e2c6451:	test   %eax,%eax
+   0x00002e498e2c6453:	jne    0x2e498e2c65bf
+   0x00002e498e2c6459:	mov    0x70(%r14),%rax
+   0x00002e498e2c645d:	mov    0x78(%r14),%rcx
+   0x00002e498e2c6461:	cmp    %rcx,%rax
+   0x00002e498e2c6464:	je     0x2e498e2c65c9
+   0x00002e498e2c646a:	add    $0x1,%rax
+   0x00002e498e2c646e:	mov    %rax,0x70(%r14)
+   0x00002e498e2c6472:	callq  0x2e498e2c6380          ; minfit
+   0x00002e498e2c6477:	mov    %eax,0xc(%rsp)
+   0x00002e498e2c647b:	cmp    $0xfffffffe,%eax
+   0x00002e498e2c647e:	jne    0x2e498e2c649b
+   0x00002e498e2c6484:	callq  0x2e498e2c6350          ; addsolution
+   0x00002e498e2c6489:	mov    %eax,0x10(%rsp)
+   0x00002e498e2c648d:	mov    $0xffffffff,%eax
+   0x00002e498e2c6492:	mov    %eax,0xc(%rsp)
+   0x00002e498e2c6496:	jmpq   0x2e498e2c649f
+   0x00002e498e2c649b:	mov    %eax,0xc(%rsp)
+   0x00002e498e2c649f:	mov    0xc(%rsp),%eax
+   0x00002e498e2c64a3:	cmp    $0xffffffff,%eax
+   0x00002e498e2c64a6:	jne    0x2e498e2c64f0
+   0x00002e498e2c64ac:	mov    0x88(%r14),%eax
+   0x00002e498e2c64b3:	mov    0x84(%r14),%ecx
+   0x00002e498e2c64ba:	cmp    %ecx,%eax
+   0x00002e498e2c64bc:	je     0x2e498e2c65d3
+   0x00002e498e2c64c2:	sub    $0x8,%eax
+   0x00002e498e2c64c5:	mov    %eax,0x88(%r14)
+   0x00002e498e2c64cc:	mov    (%r15,%rax,1),%edi
+   0x00002e498e2c64d0:	mov    %edi,0x8(%rsp)
+   0x00002e498e2c64d4:	mov    0x4(%r15,%rax,1),%eax
+   0x00002e498e2c64d9:	mov    %eax,0xc(%rsp)
+   0x00002e498e2c64dd:	callq  0x2e498e2c6250          ; uncover
+   0x00002e498e2c64e2:	mov    0x8(%rsp),%eax
+   0x00002e498e2c64e6:	mov    0x4(%r15,%rax,1),%edi
+   0x00002e498e2c64eb:	jmpq   0x2e498e2c64f9
+   0x00002e498e2c64f0:	mov    %eax,0xc(%rsp)
+   0x00002e498e2c64f4:	mov    0x4(%r15,%rax,1),%edi
+   0x00002e498e2c64f9:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c64fe:	je     0x2e498e2c6506
+   0x00002e498e2c6504:	ud2    
+   0x00002e498e2c6506:	cmp    0xc(%rsp),%edi
+   0x00002e498e2c650a:	jne    0x2e498e2c6593
+   0x00002e498e2c6510:	mov    0xc(%rsp),%eax
+   0x00002e498e2c6514:	mov    (%r15,%rax,1),%eax
+   0x00002e498e2c6518:	mov    %eax,0x8(%rsp)
+   0x00002e498e2c651c:	cmpl   $0x0,0x20(%r14)
+   0x00002e498e2c6521:	je     0x2e498e2c6529
+   0x00002e498e2c6527:	ud2    
+   0x00002e498e2c6529:	mov    0x8(%rsp),%edi
+   0x00002e498e2c652d:	cmp    0xc(%rsp),%edi
+   0x00002e498e2c6531:	je     0x2e498e2c654f
+   0x00002e498e2c6537:	mov    $0x1,%esi
+   0x00002e498e2c653c:	callq  0x2e498e2c60e0          ; relinkrow
+   0x00002e498e2c6541:	mov    0x8(%rsp),%eax
+   0x00002e498e2c6545:	mov    (%r15,%rax,1),%eax
+   0x00002e498e2c6549:	mov    %eax,0x8(%rsp)
+   0x00002e498e2c654d:	jmp    0x2e498e2c651c
+   0x00002e498e2c654f:	mov    0x88(%r14),%eax
+   0x00002e498e2c6556:	mov    0x84(%r14),%ecx
+   0x00002e498e2c655d:	cmp    %ecx,%eax
+   0x00002e498e2c655f:	je     0x2e498e2c65d3
+   0x00002e498e2c6565:	sub    $0x8,%eax
+   0x00002e498e2c6568:	mov    %eax,0x88(%r14)
+   0x00002e498e2c656f:	mov    (%r15,%rax,1),%edi
+   0x00002e498e2c6573:	mov    %edi,0x8(%rsp)
+   0x00002e498e2c6577:	mov    0x4(%r15,%rax,1),%ecx
+   0x00002e498e2c657c:	mov    %ecx,0xc(%rsp)
+   0x00002e498e2c6580:	callq  0x2e498e2c6250          ; uncover
+   0x00002e498e2c6585:	mov    0x8(%rsp),%eax
+   0x00002e498e2c6589:	mov    0x4(%r15,%rax,1),%edi
+   0x00002e498e2c658e:	jmpq   0x2e498e2c64f9
+   0x00002e498e2c6593:	mov    0x88(%r14),%eax
+   0x00002e498e2c659a:	mov    %edi,(%r15,%rax,1)
+   0x00002e498e2c659e:	mov    0xc(%rsp),%ecx
+   0x00002e498e2c65a2:	mov    %ecx,0x4(%r15,%rax,1)
+   0x00002e498e2c65a7:	add    $0x8,%eax
+   0x00002e498e2c65aa:	mov    %eax,0x88(%r14)
+   0x00002e498e2c65b1:	callq  0x2e498e2c6160          ; cover
+   0x00002e498e2c65b6:	mov    0x14(%rsp),%edi
+   0x00002e498e2c65ba:	jmpq   0x2e498e2c6440
+   0x00002e498e2c65bf:	mov    $0x2,%eax
+   0x00002e498e2c65c4:	jmpq   0x2e498e2c65d5
+   0x00002e498e2c65c9:	mov    $0x1,%eax
+   0x00002e498e2c65ce:	jmpq   0x2e498e2c65d5
+   0x00002e498e2c65d3:	xor    %eax,%eax
+   0x00002e498e2c65d5:	add    $0x18,%rsp
+   0x00002e498e2c65d9:	pop    %rbp
+   0x00002e498e2c65da:	pop    %r14
+   0x00002e498e2c65dc:	retq   
+; end of func dlx
+
+   0x00002e498e2c65dd:	hlt    
+   0x00002e498e2c65de:	hlt    
+   0x00002e498e2c65df:	hlt    
+
+; trampoline for func setstack
+   0x00002e498e2c65e0:	cmp    $0x5,%ebx
+   0x00002e498e2c65e3:	je     0x2e498e2c65f0
+   0x00002e498e2c65e9:	ud2    
+   0x00002e498e2c65eb:	nopl   0x0(%rax,%rax,1)
+
+; func setstack
+   0x00002e498e2c65f0:	push   %r14
+   0x00002e498e2c65f2:	push   %rbp
+   0x00002e498e2c65f3:	mov    %rsp,%rbp
+   0x00002e498e2c65f6:	mov    %edi,0x88(%r14)
+   0x00002e498e2c65fd:	mov    %edi,0x84(%r14)
+   0x00002e498e2c6604:	pop    %rbp
+   0x00002e498e2c6605:	pop    %r14
+   0x00002e498e2c6607:	retq   
+; end of func setstack
+
+   0x00002e498e2c6608:	hlt    
+   0x00002e498e2c6609:	hlt    
+   0x00002e498e2c660a:	hlt    
+   0x00002e498e2c660b:	hlt    
+   0x00002e498e2c660c:	hlt    
+   0x00002e498e2c660d:	hlt    
+   0x00002e498e2c660e:	hlt    
+   0x00002e498e2c660f:	hlt    
+
+; trampoline for func setsolspace
+   0x00002e498e2c6610:	cmp    $0x11,%ebx
+   0x00002e498e2c6613:	je     0x2e498e2c6620
+   0x00002e498e2c6619:	ud2    
+   0x00002e498e2c661b:	nopl   0x0(%rax,%rax,1)
+
+; func setsolspace
+   0x00002e498e2c6620:	push   %r14
+   0x00002e498e2c6622:	push   %rbp
+   0x00002e498e2c6623:	mov    %rsp,%rbp
+   0x00002e498e2c6626:	mov    %edi,0x60(%r14)
+   0x00002e498e2c662a:	mov    %esi,0x64(%r14)
+   0x00002e498e2c662e:	mov    %edx,0x68(%r14)
+   0x00002e498e2c6632:	mov    %ecx,0x6c(%r14)
+   0x00002e498e2c6636:	pop    %rbp
+   0x00002e498e2c6637:	pop    %r14
+   0x00002e498e2c6639:	retq   
+; end of func setsolspace
+
+   0x00002e498e2c663a:	hlt    
+   0x00002e498e2c663b:	hlt    
+   0x00002e498e2c663c:	hlt    
+   0x00002e498e2c663d:	hlt    
+   0x00002e498e2c663e:	hlt    
+   0x00002e498e2c663f:	hlt    
+
+; trampoline for func getsol
+   0x00002e498e2c6640:	cmp    $0x3,%ebx
+   0x00002e498e2c6643:	je     0x2e498e2c6650
+   0x00002e498e2c6649:	ud2    
+   0x00002e498e2c664b:	nopl   0x0(%rax,%rax,1)
+
+; func getsol
+   0x00002e498e2c6650:	push   %r14
+   0x00002e498e2c6652:	push   %rbp
+   0x00002e498e2c6653:	mov    %rsp,%rbp
+   0x00002e498e2c6656:	mov    0x60(%r14),%eax
+   0x00002e498e2c665a:	pop    %rbp
+   0x00002e498e2c665b:	pop    %r14
+   0x00002e498e2c665d:	retq   
+; end of func getsol
+
+   0x00002e498e2c665e:	hlt    
+   0x00002e498e2c665f:	hlt    
+
+; trampoline for func settry
+   0x00002e498e2c6660:	cmp    $0x6c9,%ebx
+   0x00002e498e2c6666:	je     0x2e498e2c6670
+   0x00002e498e2c666c:	ud2    
+   0x00002e498e2c666e:	xchg   %ax,%ax
+
+; func settry
+   0x00002e498e2c6670:	push   %r14
+   0x00002e498e2c6672:	push   %rbp
+   0x00002e498e2c6673:	mov    %rsp,%rbp
+   0x00002e498e2c6676:	cvttsd2si %xmm0,%rax
+   0x00002e498e2c667b:	cmp    $0x1,%rax
+   0x00002e498e2c667f:	jo     0x2e498e2c66a0
+   0x00002e498e2c6685:	mov    %rax,0x70(%r14)
+   0x00002e498e2c6689:	cvttsd2si %xmm1,%rax
+   0x00002e498e2c668e:	cmp    $0x1,%rax
+   0x00002e498e2c6692:	jo     0x2e498e2c66c4
+   0x00002e498e2c6698:	mov    %rax,0x78(%r14)
+   0x00002e498e2c669c:	pop    %rbp
+   0x00002e498e2c669d:	pop    %r14
+   0x00002e498e2c669f:	retq   
+; end of func settry
+
+; func settry overflow process
+   0x00002e498e2c66a0:	ucomisd %xmm0,%xmm0
+   0x00002e498e2c66a4:	jp     0x2e498e2c66c2          ; jump if tried is NaN
+   0x00002e498e2c66aa:	movsd  0x32d(%rip),%xmm15        # 0x2e498e2c69e0
+   0x00002e498e2c66b3:	ucomisd %xmm15,%xmm0
+   0x00002e498e2c66b8:	jne    0x2e498e2c66c0          ; jump if tried is not -2^63
+   0x00002e498e2c66be:	jmp    0x2e498e2c6685          ; tried is -2^63, go back
+   0x00002e498e2c66c0:	ud2                            ; tried is too big to fit in i64
+   0x00002e498e2c66c2:	ud2                            ; tried is NaN
+   0x00002e498e2c66c4:	ucomisd %xmm1,%xmm1
+   0x00002e498e2c66c8:	jp     0x2e498e2c66e6          ; jump if maxtry is NaN
+   0x00002e498e2c66ce:	movsd  0x309(%rip),%xmm15        # 0x2e498e2c69e0
+   0x00002e498e2c66d7:	ucomisd %xmm15,%xmm1
+   0x00002e498e2c66dc:	jne    0x2e498e2c66e4          ; jump if maxtry is not -2^63
+   0x00002e498e2c66e2:	jmp    0x2e498e2c6698          ; maxtry is -2^63, go back
+   0x00002e498e2c66e4:	ud2                            ; maxtry is too big to fit in i64
+   0x00002e498e2c66e6:	ud2                            ; maxtry is NaN
+; end of func settry overflow process
+
+   0x00002e498e2c66e8:	hlt    
+   0x00002e498e2c66e9:	hlt    
+   0x00002e498e2c66ea:	hlt    
+   0x00002e498e2c66eb:	hlt    
+   0x00002e498e2c66ec:	hlt    
+   0x00002e498e2c66ed:	hlt    
+   0x00002e498e2c66ee:	hlt    
+   0x00002e498e2c66ef:	hlt    
+
+; trampoline for func gettried
+   0x00002e498e2c66f0:	cmp    $0xf,%ebx
+   0x00002e498e2c66f3:	je     0x2e498e2c6700
+   0x00002e498e2c66f9:	ud2    
+   0x00002e498e2c66fb:	nopl   0x0(%rax,%rax,1)
+
+; func gettried
+   0x00002e498e2c6700:	push   %r14
+   0x00002e498e2c6702:	push   %rbp
+   0x00002e498e2c6703:	mov    %rsp,%rbp
+   0x00002e498e2c6706:	mov    0x70(%r14),%rax
+   0x00002e498e2c670a:	xorpd  %xmm0,%xmm0
+   0x00002e498e2c670e:	cvtsi2sd %rax,%xmm0
+   0x00002e498e2c6713:	pop    %rbp
+   0x00002e498e2c6714:	pop    %r14
+   0x00002e498e2c6716:	retq   
+; end of func gettried
+
+   0x00002e498e2c6717:	hlt    
+   0x00002e498e2c6718:	hlt    
+   0x00002e498e2c6719:	hlt    
+   0x00002e498e2c671a:	hlt    
+   0x00002e498e2c671b:	hlt    
+   0x00002e498e2c671c:	hlt    
+   0x00002e498e2c671d:	hlt    
+   0x00002e498e2c671e:	hlt    
+   0x00002e498e2c671f:	hlt    
+
+; trampoline for func setright
+   0x00002e498e2c6720:	cmp    $0x9,%ebx
+   0x00002e498e2c6723:	je     0x2e498e2c6730
+   0x00002e498e2c6729:	ud2    
+   0x00002e498e2c672b:	nopl   0x0(%rax,%rax,1)
+
+; func setright
+   0x00002e498e2c6730:	push   %r14
+   0x00002e498e2c6732:	push   %rbp
+   0x00002e498e2c6733:	mov    %rsp,%rbp
+   0x00002e498e2c6736:	mov    %esi,0xc(%r15,%rdi,1)
+   0x00002e498e2c673b:	mov    0x8(%r15,%rsi,1),%eax
+   0x00002e498e2c6740:	mov    %edi,0xc(%r15,%rax,1)
+   0x00002e498e2c6745:	mov    0x8(%r15,%rsi,1),%eax
+   0x00002e498e2c674a:	mov    %eax,0x8(%r15,%rdi,1)
+   0x00002e498e2c674f:	mov    %edi,0x8(%r15,%rsi,1)
+   0x00002e498e2c6754:	pop    %rbp
+   0x00002e498e2c6755:	pop    %r14
+   0x00002e498e2c6757:	retq   
+; end of func setright
+
+   0x00002e498e2c6758:	hlt    
+   0x00002e498e2c6759:	hlt    
+   0x00002e498e2c675a:	hlt    
+   0x00002e498e2c675b:	hlt    
+   0x00002e498e2c675c:	hlt    
+   0x00002e498e2c675d:	hlt    
+   0x00002e498e2c675e:	hlt    
+   0x00002e498e2c675f:	hlt    
+
+; trampoline for func setdown
+   0x00002e498e2c6760:	cmp    $0x9,%ebx
+   0x00002e498e2c6763:	je     0x2e498e2c6770
+   0x00002e498e2c6769:	ud2    
+   0x00002e498e2c676b:	nopl   0x0(%rax,%rax,1)
+
+; func setdown
+   0x00002e498e2c6770:	push   %r14
+   0x00002e498e2c6772:	push   %rbp
+   0x00002e498e2c6773:	mov    %rsp,%rbp
+   0x00002e498e2c6776:	mov    %esi,0x4(%r15,%rdi,1)
+   0x00002e498e2c677b:	mov    (%r15,%rsi,1),%eax
+   0x00002e498e2c677f:	mov    %edi,0x4(%r15,%rax,1)
+   0x00002e498e2c6784:	mov    (%r15,%rsi,1),%eax
+   0x00002e498e2c6788:	mov    %eax,(%r15,%rdi,1)
+   0x00002e498e2c678c:	mov    %edi,(%r15,%rsi,1)
+   0x00002e498e2c6790:	pop    %rbp
+   0x00002e498e2c6791:	pop    %r14
+   0x00002e498e2c6793:	retq   
+; end of func setdown
+
+   0x00002e498e2c6794:	hlt    
+   0x00002e498e2c6795:	hlt    
+   0x00002e498e2c6796:	hlt    
+   0x00002e498e2c6797:	hlt    
+   0x00002e498e2c6798:	hlt    
+   0x00002e498e2c6799:	hlt    
+   0x00002e498e2c679a:	hlt    
+   0x00002e498e2c679b:	hlt    
+   0x00002e498e2c679c:	hlt    
+   0x00002e498e2c679d:	hlt    
+   0x00002e498e2c679e:	hlt    
+   0x00002e498e2c679f:	hlt    
+
+; trampoline for func setroot
+   0x00002e498e2c67a0:	cmp    $0x5,%ebx
+   0x00002e498e2c67a3:	je     0x2e498e2c67b0
+   0x00002e498e2c67a9:	ud2    
+   0x00002e498e2c67ab:	nopl   0x0(%rax,%rax,1)
+
+; func setroot
+   0x00002e498e2c67b0:	push   %r14
+   0x00002e498e2c67b2:	push   %rbp
+   0x00002e498e2c67b3:	mov    %rsp,%rbp
+   0x00002e498e2c67b6:	mov    %edi,(%r15,%rdi,1)
+   0x00002e498e2c67ba:	mov    %edi,0x4(%r15,%rdi,1)
+   0x00002e498e2c67bf:	mov    %edi,0x8(%r15,%rdi,1)
+   0x00002e498e2c67c4:	mov    %edi,0xc(%r15,%rdi,1)
+   0x00002e498e2c67c9:	movl   $0x0,0x10(%r15,%rdi,1)
+   0x00002e498e2c67d2:	movl   $0x0,0x14(%r15,%rdi,1)
+   0x00002e498e2c67db:	movl   $0x0,0x18(%r15,%rdi,1)
+   0x00002e498e2c67e4:	movl   $0x0,0x1c(%r15,%rdi,1)
+   0x00002e498e2c67ed:	movl   $0x0,0x20(%r15,%rdi,1)
+   0x00002e498e2c67f6:	movl   $0x0,0x24(%r15,%rdi,1)
+   0x00002e498e2c67ff:	pop    %rbp
+   0x00002e498e2c6800:	pop    %r14
+   0x00002e498e2c6802:	retq   
+; end of func setroot
+
+   0x00002e498e2c6803:	hlt    
+   0x00002e498e2c6804:	hlt    
+   0x00002e498e2c6805:	hlt    
+   0x00002e498e2c6806:	hlt    
+   0x00002e498e2c6807:	hlt    
+   0x00002e498e2c6808:	hlt    
+   0x00002e498e2c6809:	hlt    
+   0x00002e498e2c680a:	hlt    
+   0x00002e498e2c680b:	hlt    
+   0x00002e498e2c680c:	hlt    
+   0x00002e498e2c680d:	hlt    
+   0x00002e498e2c680e:	hlt    
+   0x00002e498e2c680f:	hlt    
+
+; trampoline for func addrow
+   0x00002e498e2c6810:	cmp    $0xd,%ebx
+   0x00002e498e2c6813:	je     0x2e498e2c6820
+   0x00002e498e2c6819:	ud2    
+   0x00002e498e2c681b:	nopl   0x0(%rax,%rax,1)
+
+; func addrow
+   0x00002e498e2c6820:	push   %r14
+   0x00002e498e2c6822:	push   %rbp
+   0x00002e498e2c6823:	mov    %rsp,%rbp
+   0x00002e498e2c6826:	sub    $0x18,%rsp
+   0x00002e498e2c682a:	cmp    %rsp,0x18(%r14)
+   0x00002e498e2c682e:	jb     0x2e498e2c6836
+   0x00002e498e2c6834:	ud2    
+   0x00002e498e2c6836:	mov    %edi,0x14(%rsp)
+   0x00002e498e2c683a:	mov    %esi,0x10(%rsp)
+   0x00002e498e2c683e:	mov    %edx,0xc(%rsp)
+   0x00002e498e2c6842:	mov    0x10(%rsp),%edi
+   0x00002e498e2c6846:	mov    0x14(%rsp),%esi
+   0x00002e498e2c684a:	callq  0x2e498e2c6770          ; setdown
+   0x00002e498e2c684f:	mov    0x10(%rsp),%eax
+   0x00002e498e2c6853:	mov    %eax,0x8(%r15,%rax,1)
+   0x00002e498e2c6858:	mov    0x10(%rsp),%eax
+   0x00002e498e2c685c:	mov    %eax,0xc(%r15,%rax,1)
+   0x00002e498e2c6861:	mov    0xc(%rsp),%eax
+   0x00002e498e2c6865:	mov    0x10(%rsp),%ecx
+   0x00002e498e2c6869:	mov    %eax,0x10(%r15,%rcx,1)
+   0x00002e498e2c686e:	mov    0x10(%rsp),%eax
+   0x00002e498e2c6872:	mov    0x14(%rsp),%ecx
+   0x00002e498e2c6876:	mov    %ecx,0x14(%r15,%rax,1)
+   0x00002e498e2c687b:	add    $0x18,%rsp
+   0x00002e498e2c687f:	pop    %rbp
+   0x00002e498e2c6880:	pop    %r14
+   0x00002e498e2c6882:	retq   
+; end of func addrow
+
+   0x00002e498e2c6883:	hlt    
+   0x00002e498e2c6884:	hlt    
+   0x00002e498e2c6885:	hlt    
+   0x00002e498e2c6886:	hlt    
+   0x00002e498e2c6887:	hlt    
+   0x00002e498e2c6888:	hlt    
+   0x00002e498e2c6889:	hlt    
+   0x00002e498e2c688a:	hlt    
+   0x00002e498e2c688b:	hlt    
+   0x00002e498e2c688c:	hlt    
+   0x00002e498e2c688d:	hlt    
+   0x00002e498e2c688e:	hlt    
+   0x00002e498e2c688f:	hlt    
+
+; trampoline for func addcolumn
+   0x00002e498e2c6890:	cmp    $0x15,%ebx
+   0x00002e498e2c6893:	je     0x2e498e2c68a0
+   0x00002e498e2c6899:	ud2    
+   0x00002e498e2c689b:	nopl   0x0(%rax,%rax,1)
+
+; func addcolumn
+   0x00002e498e2c68a0:	push   %r14
+   0x00002e498e2c68a2:	push   %rbp
+   0x00002e498e2c68a3:	mov    %rsp,%rbp
+   0x00002e498e2c68a6:	sub    $0x28,%rsp
+   0x00002e498e2c68aa:	cmp    %rsp,0x18(%r14)
+   0x00002e498e2c68ae:	jb     0x2e498e2c68b6
+   0x00002e498e2c68b4:	ud2    
+   0x00002e498e2c68b6:	mov    %edi,0x24(%rsp)
+   0x00002e498e2c68ba:	mov    %esi,0x20(%rsp)
+   0x00002e498e2c68be:	mov    %edx,0x1c(%rsp)
+   0x00002e498e2c68c2:	mov    %ecx,0x18(%rsp)
+   0x00002e498e2c68c6:	mov    %r8d,0x14(%rsp)
+   0x00002e498e2c68cb:	mov    0x20(%rsp),%eax
+   0x00002e498e2c68cf:	mov    %eax,(%r15,%rax,1)
+   0x00002e498e2c68d3:	mov    0x20(%rsp),%eax
+   0x00002e498e2c68d7:	mov    %eax,0x4(%r15,%rax,1)
+   0x00002e498e2c68dc:	mov    0x20(%rsp),%edi
+   0x00002e498e2c68e0:	mov    0x24(%rsp),%esi
+   0x00002e498e2c68e4:	callq  0x2e498e2c6730          ; setright
+   0x00002e498e2c68e9:	mov    0x20(%rsp),%ecx
+   0x00002e498e2c68ed:	mov    0x24(%rsp),%eax
+   0x00002e498e2c68f1:	mov    %eax,0x10(%r15,%rcx,1)
+   0x00002e498e2c68f6:	mov    0x1c(%rsp),%ecx
+   0x00002e498e2c68fa:	mov    0x20(%rsp),%eax
+   0x00002e498e2c68fe:	mov    %ecx,0x14(%r15,%rax,1)
+   0x00002e498e2c6903:	mov    0x20(%rsp),%eax
+   0x00002e498e2c6907:	movl   $0x0,0x18(%r15,%rax,1)
+   0x00002e498e2c6910:	mov    0x20(%rsp),%eax
+   0x00002e498e2c6914:	movl   $0x0,0x1c(%r15,%rax,1)
+   0x00002e498e2c691d:	mov    0x18(%rsp),%eax
+   0x00002e498e2c6921:	mov    0x20(%rsp),%ecx
+   0x00002e498e2c6925:	mov    %eax,0x20(%r15,%rcx,1)
+   0x00002e498e2c692a:	mov    0x14(%rsp),%ecx
+   0x00002e498e2c692e:	mov    0x20(%rsp),%eax
+   0x00002e498e2c6932:	mov    %ecx,0x24(%r15,%rax,1)
+   0x00002e498e2c6937:	add    $0x28,%rsp
+   0x00002e498e2c693b:	pop    %rbp
+   0x00002e498e2c693c:	pop    %r14
+   0x00002e498e2c693e:	retq   
+; end of func addcolumn
+
+   0x00002e498e2c693f:	hlt    
+
+; trampoline for func addcell
+   0x00002e498e2c6940:	cmp    $0xd,%ebx
+   0x00002e498e2c6943:	je     0x2e498e2c6950
+   0x00002e498e2c6949:	ud2    
+   0x00002e498e2c694b:	nopl   0x0(%rax,%rax,1)
+
+; func addcell
+   0x00002e498e2c6950:	push   %r14
+   0x00002e498e2c6952:	push   %rbp
+   0x00002e498e2c6953:	mov    %rsp,%rbp
+   0x00002e498e2c6956:	sub    $0x18,%rsp
+   0x00002e498e2c695a:	cmp    %rsp,0x18(%r14)
+   0x00002e498e2c695e:	jb     0x2e498e2c6966
+   0x00002e498e2c6964:	ud2    
+   0x00002e498e2c6966:	mov    %edi,0x14(%rsp)
+   0x00002e498e2c696a:	mov    %esi,0x10(%rsp)
+   0x00002e498e2c696e:	mov    %edx,0xc(%rsp)
+   0x00002e498e2c6972:	mov    0xc(%rsp),%esi
+   0x00002e498e2c6976:	callq  0x2e498e2c6770          ; setdown
+   0x00002e498e2c697b:	mov    0x10(%rsp),%esi
+   0x00002e498e2c697f:	mov    0x14(%rsp),%edi
+   0x00002e498e2c6983:	callq  0x2e498e2c6730          ; setright
+   0x00002e498e2c6988:	mov    0x10(%rsp),%eax
+   0x00002e498e2c698c:	mov    0x8(%r15,%rax,1),%ecx
+   0x00002e498e2c6991:	mov    0xc(%r15,%rax,1),%edx
+   0x00002e498e2c6996:	mov    %edx,0xc(%r15,%rcx,1)
+   0x00002e498e2c699b:	mov    0xc(%r15,%rax,1),%ecx
+   0x00002e498e2c69a0:	mov    0x8(%r15,%rax,1),%edx
+   0x00002e498e2c69a5:	mov    %edx,0x8(%r15,%rcx,1)
+   0x00002e498e2c69aa:	mov    0x14(%rsp),%ecx
+   0x00002e498e2c69ae:	mov    %eax,0x10(%r15,%rcx,1)
+   0x00002e498e2c69b3:	mov    0xc(%rsp),%eax
+   0x00002e498e2c69b7:	mov    %eax,0x14(%r15,%rcx,1)
+   0x00002e498e2c69bc:	mov    0xc(%rsp),%eax
+   0x00002e498e2c69c0:	mov    0x18(%r15,%rax,1),%eax
+   0x00002e498e2c69c5:	add    $0x1,%eax
+   0x00002e498e2c69c8:	mov    0xc(%rsp),%ecx
+   0x00002e498e2c69cc:	mov    %eax,0x18(%r15,%rcx,1)
+   0x00002e498e2c69d1:	add    $0x18,%rsp
+   0x00002e498e2c69d5:	pop    %rbp
+   0x00002e498e2c69d6:	pop    %r14
+   0x00002e498e2c69d8:	retq   
+; end of func addcell
+
+   0x00002e498e2c69d9:	hlt    
+   0x00002e498e2c69da:	hlt    
+   0x00002e498e2c69db:	hlt    
+   0x00002e498e2c69dc:	hlt    
+   0x00002e498e2c69dd:	hlt    
+   0x00002e498e2c69de:	hlt    
+   0x00002e498e2c69df:	hlt    
+
+; encode -2**63 as f64
+   0x00002e498e2c69e0:	add    %al,(%rax)
+   0x00002e498e2c69e2:	add    %al,(%rax)
+   0x00002e498e2c69e4:	add    %al,(%rax)
+   0x00002e498e2c69e6:	loopne 0x2e498e2c69ab
+
+   0x00002e498e2c69e8:	ud2    
+   0x00002e498e2c69ea:	hlt    
+   0x00002e498e2c69eb:	hlt    
+   0x00002e498e2c69ec:	hlt    
+   0x00002e498e2c69ed:	hlt    
+   0x00002e498e2c69ee:	hlt    
+   0x00002e498e2c69ef:	hlt    
