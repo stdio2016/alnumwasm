@@ -1,0 +1,875 @@
+using Firefox 63.0 64 bit on Windows 10
+
+r14  0x00000152b0b8f000
+r15  0x0000015432621000
+
+disassembled by Visual Studio debugger
+000000D3A97E1000  cmp         r10d,9  
+000000D3A97E1004  je          000000D3A97E1010  
+000000D3A97E100A  ud2  
+000000D3A97E100C  nop         dword ptr [rax]  
+
+; imported func debug
+000000D3A97E1010  push        r14  
+000000D3A97E1012  push        rbp  
+000000D3A97E1013  mov         rbp,rsp  
+000000D3A97E1016  sub         rsp,28h  
+000000D3A97E101A  cmp         qword ptr [r14+20h],rsp  
+000000D3A97E101E  jb          000000D3A97E1026  
+000000D3A97E1024  ud2  
+000000D3A97E1026  mov         rax,qword ptr [r14+40h]  
+000000D3A97E102A  mov         rbx,qword ptr [r14+50h]  
+000000D3A97E102E  mov         r10,qword ptr [r14+18h]  
+000000D3A97E1032  mov         qword ptr [r10+80h],rbx  
+000000D3A97E1039  mov         r14,qword ptr [r14+48h]  
+000000D3A97E103D  mov         r15,qword ptr [r14]  
+000000D3A97E1040  call        rax  
+000000D3A97E1042  mov         r14,qword ptr [rsp+30h]  
+000000D3A97E1047  mov         r15,qword ptr [r14]  
+000000D3A97E104A  mov         r10,qword ptr [r14+18h]  
+000000D3A97E104E  mov         r12,qword ptr [r14+10h]  
+000000D3A97E1052  mov         qword ptr [r10+80h],r12  
+000000D3A97E1059  add         rsp,28h  
+000000D3A97E105D  pop         rbp  
+000000D3A97E105E  pop         r14  
+000000D3A97E1060  ret  
+000000D3A97E1061  ud2  
+; end of imported func debug
+
+000000D3A97E1063  hlt  
+000000D3A97E1064  hlt  
+000000D3A97E1065  hlt  
+000000D3A97E1066  hlt  
+000000D3A97E1067  hlt  
+000000D3A97E1068  hlt  
+000000D3A97E1069  hlt  
+000000D3A97E106A  hlt  
+000000D3A97E106B  hlt  
+000000D3A97E106C  hlt  
+000000D3A97E106D  hlt  
+000000D3A97E106E  hlt  
+000000D3A97E106F  hlt  
+000000D3A97E1070  cmp         r10d,9  
+000000D3A97E1074  je          000000D3A97E1080  
+000000D3A97E107A  ud2  
+000000D3A97E107C  nop         dword ptr [rax]  
+
+; func unlinkrow
+000000D3A97E1080  push        r14  
+000000D3A97E1082  push        rbp  
+000000D3A97E1083  mov         rbp,rsp  
+000000D3A97E1086  test        edx,edx  
+000000D3A97E1088  jne         000000D3A97E1098  
+000000D3A97E108E  mov         eax,dword ptr [r15+rcx+0Ch]  
+000000D3A97E1093  jmp         000000D3A97E109A  
+000000D3A97E1098  mov         eax,ecx  
+000000D3A97E109A  cmp         dword ptr [r14+28h],0  
+000000D3A97E109F  je          000000D3A97E10A7  
+000000D3A97E10A5  ud2  
+000000D3A97E10A7  cmp         eax,ecx  
+000000D3A97E10A9  je          000000D3A97E10DD  
+000000D3A97E10AF  mov         rbx,qword ptr [r15+rax]  
+000000D3A97E10B3  mov         edx,ebx  
+000000D3A97E10B5  shr         rbx,20h  
+000000D3A97E10B9  mov         ebx,ebx  
+000000D3A97E10BB  mov         dword ptr [r15+rdx+4],ebx  
+000000D3A97E10C0  mov         dword ptr [r15+rbx],edx  
+000000D3A97E10C4  mov         edx,dword ptr [r15+rax+14h]  
+000000D3A97E10C9  mov         eax,dword ptr [r15+rax+0Ch]  
+000000D3A97E10CE  mov         ebx,dword ptr [r15+rdx+18h]  
+000000D3A97E10D3  sub         ebx,1  
+000000D3A97E10D6  mov         dword ptr [r15+rdx+18h],ebx  
+000000D3A97E10DB  jmp         000000D3A97E109A  
+000000D3A97E10DD  pop         rbp  
+000000D3A97E10DE  pop         r14  
+000000D3A97E10E0  ret  
+; end of func unlinkrow
+
+000000D3A97E10E1  hlt  
+000000D3A97E10E2  hlt  
+000000D3A97E10E3  hlt  
+000000D3A97E10E4  hlt  
+000000D3A97E10E5  hlt  
+000000D3A97E10E6  hlt  
+000000D3A97E10E7  hlt  
+000000D3A97E10E8  hlt  
+000000D3A97E10E9  hlt  
+000000D3A97E10EA  hlt  
+000000D3A97E10EB  hlt  
+000000D3A97E10EC  hlt  
+000000D3A97E10ED  hlt  
+000000D3A97E10EE  hlt  
+000000D3A97E10EF  hlt  
+000000D3A97E10F0  cmp         r10d,9  
+000000D3A97E10F4  je          000000D3A97E1100  
+000000D3A97E10FA  ud2  
+000000D3A97E10FC  nop         dword ptr [rax]  
+
+; func relinkrow
+000000D3A97E1100  push        r14  
+000000D3A97E1102  push        rbp  
+000000D3A97E1103  mov         rbp,rsp  
+000000D3A97E1106  test        edx,edx  
+000000D3A97E1108  jne         000000D3A97E1118  
+000000D3A97E110E  mov         eax,dword ptr [r15+rcx+0Ch]  
+000000D3A97E1113  jmp         000000D3A97E111A  
+000000D3A97E1118  mov         eax,ecx  
+000000D3A97E111A  cmp         dword ptr [r14+28h],0  
+000000D3A97E111F  je          000000D3A97E1127  
+000000D3A97E1125  ud2  
+000000D3A97E1127  cmp         eax,ecx  
+000000D3A97E1129  je          000000D3A97E115D  
+000000D3A97E112F  mov         rdx,qword ptr [r15+rax]  
+000000D3A97E1133  mov         ebx,edx  
+000000D3A97E1135  mov         dword ptr [r15+rbx+4],eax  
+000000D3A97E113A  shr         rdx,20h  
+000000D3A97E113E  mov         edx,edx  
+000000D3A97E1140  mov         dword ptr [r15+rdx],eax  
+000000D3A97E1144  mov         edx,dword ptr [r15+rax+14h]  
+000000D3A97E1149  mov         ebx,dword ptr [r15+rdx+18h]  
+000000D3A97E114E  add         ebx,1  
+000000D3A97E1151  mov         dword ptr [r15+rdx+18h],ebx  
+000000D3A97E1156  mov         eax,dword ptr [r15+rax+0Ch]  
+000000D3A97E115B  jmp         000000D3A97E111A  
+000000D3A97E115D  pop         rbp  
+000000D3A97E115E  pop         r14  
+000000D3A97E1160  ret  
+; end of func relinkrow
+
+000000D3A97E1161  hlt  
+000000D3A97E1162  hlt  
+000000D3A97E1163  hlt  
+000000D3A97E1164  hlt  
+000000D3A97E1165  hlt  
+000000D3A97E1166  hlt  
+000000D3A97E1167  hlt  
+000000D3A97E1168  hlt  
+000000D3A97E1169  hlt  
+000000D3A97E116A  hlt  
+000000D3A97E116B  hlt  
+000000D3A97E116C  hlt  
+000000D3A97E116D  hlt  
+000000D3A97E116E  hlt  
+000000D3A97E116F  hlt  
+000000D3A97E1170  cmp         r10d,5  
+000000D3A97E1174  je          000000D3A97E1180  
+000000D3A97E117A  ud2  
+000000D3A97E117C  nop         dword ptr [rax]  
+
+; func cover
+000000D3A97E1180  push        r14  
+000000D3A97E1182  push        rbp  
+000000D3A97E1183  mov         rbp,rsp  
+000000D3A97E1186  sub         rsp,38h  
+000000D3A97E118A  cmp         qword ptr [r14+20h],rsp  
+000000D3A97E118E  jb          000000D3A97E1196  
+000000D3A97E1194  ud2  
+000000D3A97E1196  mov         dword ptr [rsp+34h],ecx  
+000000D3A97E119A  mov         r11d,dword ptr [rsp+34h]  
+000000D3A97E119F  mov         dword ptr [rsp+30h],r11d  
+000000D3A97E11A4  cmp         dword ptr [r14+28h],0  
+000000D3A97E11A9  je          000000D3A97E11B1  
+000000D3A97E11AF  ud2  
+000000D3A97E11B1  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E11B5  mov         eax,dword ptr [r15+rax+14h]  
+000000D3A97E11BA  mov         dword ptr [rsp+2Ch],eax  
+000000D3A97E11BE  mov         ecx,dword ptr [r15+rax+1Ch]  
+000000D3A97E11C3  add         ecx,1  
+000000D3A97E11C6  mov         dword ptr [r15+rax+1Ch],ecx  
+000000D3A97E11CB  mov         edx,dword ptr [r15+rax+24h]  
+000000D3A97E11D0  cmp         ecx,edx  
+000000D3A97E11D2  jne         000000D3A97E1239  
+000000D3A97E11D8  mov         ecx,dword ptr [r15+rax+8]  
+000000D3A97E11DD  mov         edx,dword ptr [r15+rax+0Ch]  
+000000D3A97E11E2  mov         dword ptr [r15+rcx+0Ch],edx  
+000000D3A97E11E7  mov         ecx,dword ptr [r15+rax+0Ch]  
+000000D3A97E11EC  mov         edx,dword ptr [r15+rax+8]  
+000000D3A97E11F1  mov         dword ptr [r15+rcx+8],edx  
+000000D3A97E11F6  mov         eax,dword ptr [r15+rax+4]  
+000000D3A97E11FB  mov         dword ptr [rsp+28h],eax  
+000000D3A97E11FF  cmp         dword ptr [r14+28h],0  
+000000D3A97E1204  je          000000D3A97E120C  
+000000D3A97E120A  ud2  
+000000D3A97E120C  mov         ecx,dword ptr [rsp+28h]  
+000000D3A97E1210  cmp         ecx,dword ptr [rsp+2Ch]  
+000000D3A97E1214  je          000000D3A97E1230  
+000000D3A97E121A  xor         edx,edx  
+000000D3A97E121C  call        000000D3A97E1080  
+000000D3A97E1221  mov         eax,dword ptr [rsp+28h]  
+000000D3A97E1225  mov         eax,dword ptr [r15+rax+4]  
+000000D3A97E122A  mov         dword ptr [rsp+28h],eax  
+000000D3A97E122E  jmp         000000D3A97E11FF  
+000000D3A97E1230  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E1234  jmp         000000D3A97E123D  
+000000D3A97E1239  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E123D  mov         eax,dword ptr [r15+rax+0Ch]  
+000000D3A97E1242  mov         dword ptr [rsp+30h],eax  
+000000D3A97E1246  cmp         eax,dword ptr [rsp+34h]  
+000000D3A97E124A  jne         000000D3A97E11A4  
+000000D3A97E1250  add         rsp,38h  
+000000D3A97E1254  pop         rbp  
+000000D3A97E1255  pop         r14  
+000000D3A97E1257  ret  
+; end of func cover
+
+000000D3A97E1258  hlt  
+000000D3A97E1259  hlt  
+000000D3A97E125A  hlt  
+000000D3A97E125B  hlt  
+000000D3A97E125C  hlt  
+000000D3A97E125D  hlt  
+000000D3A97E125E  hlt  
+000000D3A97E125F  hlt  
+000000D3A97E1260  cmp         r10d,5  
+000000D3A97E1264  je          000000D3A97E1270  
+000000D3A97E126A  ud2  
+000000D3A97E126C  nop         dword ptr [rax]  
+
+; func uncover
+000000D3A97E1270  push        r14  
+000000D3A97E1272  push        rbp  
+000000D3A97E1273  mov         rbp,rsp  
+000000D3A97E1276  mov         rax,rsp  
+000000D3A97E1279  sub         rax,qword ptr [r14+20h]  
+000000D3A97E127D  cmp         rax,48h  
+000000D3A97E1281  jg          000000D3A97E1289  
+000000D3A97E1287  ud2  
+000000D3A97E1289  sub         rsp,48h  
+000000D3A97E128D  mov         dword ptr [rsp+44h],ecx  
+000000D3A97E1291  mov         r11d,dword ptr [rsp+44h]  
+000000D3A97E1296  mov         dword ptr [rsp+40h],r11d  
+000000D3A97E129B  cmp         dword ptr [r14+28h],0  
+000000D3A97E12A0  je          000000D3A97E12A8  
+000000D3A97E12A6  ud2  
+000000D3A97E12A8  mov         eax,dword ptr [rsp+40h]  
+000000D3A97E12AC  mov         eax,dword ptr [r15+rax+8]  
+000000D3A97E12B1  mov         dword ptr [rsp+40h],eax  
+000000D3A97E12B5  mov         eax,dword ptr [r15+rax+14h]  
+000000D3A97E12BA  mov         dword ptr [rsp+3Ch],eax  
+000000D3A97E12BE  mov         ecx,dword ptr [r15+rax+1Ch]  
+000000D3A97E12C3  mov         dword ptr [rsp+38h],ecx  
+000000D3A97E12C7  mov         edx,dword ptr [r15+rax+24h]  
+000000D3A97E12CC  cmp         ecx,edx  
+000000D3A97E12CE  jne         000000D3A97E132D  
+000000D3A97E12D4  mov         eax,dword ptr [r15+rax]  
+000000D3A97E12D8  mov         dword ptr [rsp+34h],eax  
+000000D3A97E12DC  cmp         dword ptr [r14+28h],0  
+000000D3A97E12E1  je          000000D3A97E12E9  
+000000D3A97E12E7  ud2  
+000000D3A97E12E9  mov         ecx,dword ptr [rsp+34h]  
+000000D3A97E12ED  cmp         ecx,dword ptr [rsp+3Ch]  
+000000D3A97E12F1  je          000000D3A97E130C  
+000000D3A97E12F7  xor         edx,edx  
+000000D3A97E12F9  call        000000D3A97E1100  
+000000D3A97E12FE  mov         eax,dword ptr [rsp+34h]  
+000000D3A97E1302  mov         eax,dword ptr [r15+rax]  
+000000D3A97E1306  mov         dword ptr [rsp+34h],eax  
+000000D3A97E130A  jmp         000000D3A97E12DC  
+000000D3A97E130C  mov         eax,dword ptr [rsp+3Ch]  
+000000D3A97E1310  mov         ecx,dword ptr [r15+rax+8]  
+000000D3A97E1315  mov         dword ptr [r15+rcx+0Ch],eax  
+000000D3A97E131A  mov         ecx,dword ptr [r15+rax+0Ch]  
+000000D3A97E131F  mov         dword ptr [r15+rcx+8],eax  
+000000D3A97E1324  mov         ecx,dword ptr [rsp+38h]  
+000000D3A97E1328  jmp         000000D3A97E1331  
+000000D3A97E132D  mov         ecx,dword ptr [rsp+38h]  
+000000D3A97E1331  sub         ecx,1  
+000000D3A97E1334  mov         dword ptr [r15+rax+1Ch],ecx  
+000000D3A97E1339  mov         eax,dword ptr [rsp+40h]  
+000000D3A97E133D  cmp         eax,dword ptr [rsp+44h]  
+000000D3A97E1341  jne         000000D3A97E129B  
+000000D3A97E1347  mov         edx,1  
+000000D3A97E134C  mov         ecx,dword ptr [rsp+44h]  
+000000D3A97E1350  call        000000D3A97E1080  
+000000D3A97E1355  add         rsp,48h  
+000000D3A97E1359  pop         rbp  
+000000D3A97E135A  pop         r14  
+000000D3A97E135C  ret  
+; end of func uncover
+
+000000D3A97E135D  hlt  
+000000D3A97E135E  hlt  
+000000D3A97E135F  hlt  
+000000D3A97E1360  cmp         r10d,3  
+000000D3A97E1364  je          000000D3A97E1370  
+000000D3A97E136A  ud2  
+000000D3A97E136C  nop         dword ptr [rax]  
+
+; func addsolution
+000000D3A97E1370  push        r14  
+000000D3A97E1372  push        rbp  
+000000D3A97E1373  mov         rbp,rsp  
+000000D3A97E1376  mov         eax,dword ptr [r14+68h]  
+000000D3A97E137A  add         eax,1  
+000000D3A97E137D  mov         dword ptr [r14+68h],eax  
+000000D3A97E1381  mov         eax,1  
+000000D3A97E1386  pop         rbp  
+000000D3A97E1387  pop         r14  
+000000D3A97E1389  ret  
+; end of func addsolution
+
+000000D3A97E138A  hlt  
+000000D3A97E138B  hlt  
+000000D3A97E138C  hlt  
+000000D3A97E138D  hlt  
+000000D3A97E138E  hlt  
+000000D3A97E138F  hlt  
+000000D3A97E1390  cmp         r10d,23h  
+000000D3A97E1394  je          000000D3A97E13A0  
+000000D3A97E139A  ud2  
+000000D3A97E139C  nop         dword ptr [rax]  
+
+; func minfit
+000000D3A97E13A0  push        r14  
+000000D3A97E13A2  push        rbp  
+000000D3A97E13A3  mov         rbp,rsp  
+000000D3A97E13A6  mov         edx,dword ptr [r15+rcx+0Ch]  
+000000D3A97E13AB  xor         r9d,r9d  
+000000D3A97E13AE  mov         ebx,0FFFFFFFFh  
+000000D3A97E13B3  cmp         dword ptr [r14+28h],0  
+000000D3A97E13B8  je          000000D3A97E13C0  
+000000D3A97E13BE  ud2  
+000000D3A97E13C0  cmp         edx,ecx  
+000000D3A97E13C2  je          000000D3A97E1410  
+000000D3A97E13C8  mov         edi,dword ptr [r15+rdx+1Ch]  
+000000D3A97E13CD  mov         r8d,dword ptr [r15+rdx+20h]  
+000000D3A97E13D2  cmp         edi,r8d  
+000000D3A97E13D5  jge         000000D3A97E13FF  
+000000D3A97E13DB  mov         esi,dword ptr [r15+rdx+18h]  
+000000D3A97E13E0  add         edi,esi  
+000000D3A97E13E2  cmp         edi,r8d  
+000000D3A97E13E5  jl          000000D3A97E1406  
+000000D3A97E13EB  cmp         esi,ebx  
+000000D3A97E13ED  jae         000000D3A97E13FB  
+000000D3A97E13F3  mov         r9d,edx  
+000000D3A97E13F6  jmp         000000D3A97E13FD  
+000000D3A97E13FB  mov         esi,ebx  
+000000D3A97E13FD  mov         ebx,esi  
+000000D3A97E13FF  mov         edx,dword ptr [r15+rdx+0Ch]  
+000000D3A97E1404  jmp         000000D3A97E13B3  
+000000D3A97E1406  mov         eax,0FFFFFFFFh  
+000000D3A97E140B  jmp         000000D3A97E1424  
+000000D3A97E1410  cmp         ebx,0FFFFFFFFh  
+000000D3A97E1413  sete        cl  
+000000D3A97E1416  movzx       ecx,cl  
+000000D3A97E1419  mov         eax,0FFFFFFFEh  
+000000D3A97E141E  test        ecx,ecx  
+000000D3A97E1420  cmove       eax,r9d  
+000000D3A97E1424  pop         rbp  
+000000D3A97E1425  pop         r14  
+000000D3A97E1427  ret  
+; end of func minfit
+
+000000D3A97E1428  hlt  
+000000D3A97E1429  hlt  
+000000D3A97E142A  hlt  
+000000D3A97E142B  hlt  
+000000D3A97E142C  hlt  
+000000D3A97E142D  hlt  
+000000D3A97E142E  hlt  
+000000D3A97E142F  hlt  
+000000D3A97E1430  cmp         r10d,23h  
+000000D3A97E1434  je          000000D3A97E1440  
+000000D3A97E143A  ud2  
+000000D3A97E143C  nop         dword ptr [rax]  
+
+; func dlx
+000000D3A97E1440  push        r14  
+000000D3A97E1442  push        rbp  
+000000D3A97E1443  mov         rbp,rsp  
+000000D3A97E1446  sub         rsp,38h  
+000000D3A97E144A  cmp         qword ptr [r14+20h],rsp  
+000000D3A97E144E  jb          000000D3A97E1456  
+000000D3A97E1454  ud2  
+000000D3A97E1456  mov         dword ptr [rsp+34h],ecx  
+000000D3A97E145A  xor         eax,eax  
+000000D3A97E145C  mov         dword ptr [rsp+30h],eax  
+000000D3A97E1460  cmp         dword ptr [r14+28h],0  
+000000D3A97E1465  je          000000D3A97E146D  
+000000D3A97E146B  ud2  
+000000D3A97E146D  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E1471  test        eax,eax  
+000000D3A97E1473  jne         000000D3A97E15E2  
+000000D3A97E1479  mov         rax,qword ptr [r14+78h]  
+000000D3A97E147D  mov         rdx,qword ptr [r14+80h]  
+000000D3A97E1484  cmp         rax,rdx  
+000000D3A97E1487  je          000000D3A97E15EC  
+000000D3A97E148D  add         rax,1  
+000000D3A97E1491  mov         qword ptr [r14+78h],rax  
+000000D3A97E1495  call        000000D3A97E13A0  
+000000D3A97E149A  mov         dword ptr [rsp+2Ch],eax  
+000000D3A97E149E  cmp         eax,0FFFFFFFEh  
+000000D3A97E14A1  jne         000000D3A97E14BE  
+000000D3A97E14A7  call        000000D3A97E1370  
+000000D3A97E14AC  mov         dword ptr [rsp+30h],eax  
+000000D3A97E14B0  mov         eax,0FFFFFFFFh  
+000000D3A97E14B5  mov         dword ptr [rsp+2Ch],eax  
+000000D3A97E14B9  jmp         000000D3A97E14C2  
+000000D3A97E14BE  mov         dword ptr [rsp+2Ch],eax  
+000000D3A97E14C2  mov         eax,dword ptr [rsp+2Ch]  
+000000D3A97E14C6  cmp         eax,0FFFFFFFFh  
+000000D3A97E14C9  jne         000000D3A97E1513  
+000000D3A97E14CF  mov         eax,dword ptr [r14+90h]  
+000000D3A97E14D6  mov         ecx,dword ptr [r14+8Ch]  
+000000D3A97E14DD  cmp         eax,ecx  
+000000D3A97E14DF  je          000000D3A97E15F6  
+000000D3A97E14E5  sub         eax,8  
+000000D3A97E14E8  mov         dword ptr [r14+90h],eax  
+000000D3A97E14EF  mov         ecx,dword ptr [r15+rax]  
+000000D3A97E14F3  mov         dword ptr [rsp+28h],ecx  
+000000D3A97E14F7  mov         eax,dword ptr [r15+rax+4]  
+000000D3A97E14FC  mov         dword ptr [rsp+2Ch],eax  
+000000D3A97E1500  call        000000D3A97E1270  
+000000D3A97E1505  mov         eax,dword ptr [rsp+28h]  
+000000D3A97E1509  mov         ecx,dword ptr [r15+rax+4]  
+000000D3A97E150E  jmp         000000D3A97E151C  
+000000D3A97E1513  mov         dword ptr [rsp+2Ch],eax  
+000000D3A97E1517  mov         ecx,dword ptr [r15+rax+4]  
+000000D3A97E151C  cmp         dword ptr [r14+28h],0  
+000000D3A97E1521  je          000000D3A97E1529  
+000000D3A97E1527  ud2  
+000000D3A97E1529  cmp         ecx,dword ptr [rsp+2Ch]  
+000000D3A97E152D  jne         000000D3A97E15B6  
+000000D3A97E1533  mov         eax,dword ptr [rsp+2Ch]  
+000000D3A97E1537  mov         eax,dword ptr [r15+rax]  
+000000D3A97E153B  mov         dword ptr [rsp+28h],eax  
+000000D3A97E153F  cmp         dword ptr [r14+28h],0  
+000000D3A97E1544  je          000000D3A97E154C  
+000000D3A97E154A  ud2  
+000000D3A97E154C  mov         ecx,dword ptr [rsp+28h]  
+000000D3A97E1550  cmp         ecx,dword ptr [rsp+2Ch]  
+000000D3A97E1554  je          000000D3A97E1572  
+000000D3A97E155A  mov         edx,1  
+000000D3A97E155F  call        000000D3A97E1100  
+000000D3A97E1564  mov         eax,dword ptr [rsp+28h]  
+000000D3A97E1568  mov         eax,dword ptr [r15+rax]  
+000000D3A97E156C  mov         dword ptr [rsp+28h],eax  
+000000D3A97E1570  jmp         000000D3A97E153F  
+000000D3A97E1572  mov         eax,dword ptr [r14+90h]  
+000000D3A97E1579  mov         ecx,dword ptr [r14+8Ch]  
+000000D3A97E1580  cmp         eax,ecx  
+000000D3A97E1582  je          000000D3A97E15F6  
+000000D3A97E1588  sub         eax,8  
+000000D3A97E158B  mov         dword ptr [r14+90h],eax  
+000000D3A97E1592  mov         ecx,dword ptr [r15+rax]  
+000000D3A97E1596  mov         dword ptr [rsp+28h],ecx  
+000000D3A97E159A  mov         edx,dword ptr [r15+rax+4]  
+000000D3A97E159F  mov         dword ptr [rsp+2Ch],edx  
+000000D3A97E15A3  call        000000D3A97E1270  
+000000D3A97E15A8  mov         eax,dword ptr [rsp+28h]  
+000000D3A97E15AC  mov         ecx,dword ptr [r15+rax+4]  
+000000D3A97E15B1  jmp         000000D3A97E151C  
+000000D3A97E15B6  mov         eax,dword ptr [r14+90h]  
+000000D3A97E15BD  mov         dword ptr [r15+rax],ecx  
+000000D3A97E15C1  mov         edx,dword ptr [rsp+2Ch]  
+000000D3A97E15C5  mov         dword ptr [r15+rax+4],edx  
+000000D3A97E15CA  add         eax,8  
+000000D3A97E15CD  mov         dword ptr [r14+90h],eax  
+000000D3A97E15D4  call        000000D3A97E1180  
+000000D3A97E15D9  mov         ecx,dword ptr [rsp+34h]  
+000000D3A97E15DD  jmp         000000D3A97E1460  
+000000D3A97E15E2  mov         eax,2  
+000000D3A97E15E7  jmp         000000D3A97E15F8  
+000000D3A97E15EC  mov         eax,1  
+000000D3A97E15F1  jmp         000000D3A97E15F8  
+000000D3A97E15F6  xor         eax,eax  
+000000D3A97E15F8  add         rsp,38h  
+000000D3A97E15FC  pop         rbp  
+000000D3A97E15FD  pop         r14  
+000000D3A97E15FF  ret  
+; end of func dlx
+
+000000D3A97E1600  cmp         r10d,5  
+000000D3A97E1604  je          000000D3A97E1610  
+000000D3A97E160A  ud2  
+000000D3A97E160C  nop         dword ptr [rax]  
+
+; func setstack
+000000D3A97E1610  push        r14  
+000000D3A97E1612  push        rbp  
+000000D3A97E1613  mov         rbp,rsp  
+000000D3A97E1616  mov         dword ptr [r14+90h],ecx  
+000000D3A97E161D  mov         dword ptr [r14+8Ch],ecx  
+000000D3A97E1624  pop         rbp  
+000000D3A97E1625  pop         r14  
+000000D3A97E1627  ret  
+; end of func setstack
+
+000000D3A97E1628  hlt  
+000000D3A97E1629  hlt  
+000000D3A97E162A  hlt  
+000000D3A97E162B  hlt  
+000000D3A97E162C  hlt  
+000000D3A97E162D  hlt  
+000000D3A97E162E  hlt  
+000000D3A97E162F  hlt  
+000000D3A97E1630  cmp         r10d,11h  
+000000D3A97E1634  je          000000D3A97E1640  
+000000D3A97E163A  ud2  
+000000D3A97E163C  nop         dword ptr [rax]  
+
+; func setsolspace
+000000D3A97E1640  push        r14  
+000000D3A97E1642  push        rbp  
+000000D3A97E1643  mov         rbp,rsp  
+000000D3A97E1646  mov         dword ptr [r14+68h],ecx  
+000000D3A97E164A  mov         dword ptr [r14+6Ch],edx  
+000000D3A97E164E  mov         dword ptr [r14+70h],r8d  
+000000D3A97E1652  mov         dword ptr [r14+74h],r9d  
+000000D3A97E1656  pop         rbp  
+000000D3A97E1657  pop         r14  
+000000D3A97E1659  ret  
+; end of func setsolspace
+
+000000D3A97E165A  hlt  
+000000D3A97E165B  hlt  
+000000D3A97E165C  hlt  
+000000D3A97E165D  hlt  
+000000D3A97E165E  hlt  
+000000D3A97E165F  hlt  
+000000D3A97E1660  cmp         r10d,3  
+000000D3A97E1664  je          000000D3A97E1670  
+000000D3A97E166A  ud2  
+000000D3A97E166C  nop         dword ptr [rax]  
+
+; func getsol
+000000D3A97E1670  push        r14  
+000000D3A97E1672  push        rbp  
+000000D3A97E1673  mov         rbp,rsp  
+000000D3A97E1676  mov         eax,dword ptr [r14+68h]  
+000000D3A97E167A  pop         rbp  
+000000D3A97E167B  pop         r14  
+000000D3A97E167D  ret  
+; end of func getsol
+
+000000D3A97E167E  hlt  
+000000D3A97E167F  hlt  
+000000D3A97E1680  cmp         r10d,6C9h  
+000000D3A97E1687  je          000000D3A97E1690  
+000000D3A97E168D  ud2  
+000000D3A97E168F  nop  
+
+; func settry
+000000D3A97E1690  push        r14  
+000000D3A97E1692  push        rbp  
+000000D3A97E1693  mov         rbp,rsp  
+000000D3A97E1696  cvttsd2si   rax,xmm0  
+000000D3A97E169B  cmp         rax,1  
+000000D3A97E169F  jo          000000D3A97E16C3  
+000000D3A97E16A5  mov         qword ptr [r14+78h],rax  
+000000D3A97E16A9  cvttsd2si   rax,xmm1  
+000000D3A97E16AE  cmp         rax,1  
+000000D3A97E16B2  jo          000000D3A97E16E7  
+000000D3A97E16B8  mov         qword ptr [r14+80h],rax  
+000000D3A97E16BF  pop         rbp  
+000000D3A97E16C0  pop         r14  
+000000D3A97E16C2  ret  
+; end of func settry
+
+; func settry overflow process
+000000D3A97E16C3  ucomisd     xmm0,xmm0  
+000000D3A97E16C7  jp          000000D3A97E16E5  
+000000D3A97E16CD  movsd       xmm15,mmword ptr [0D3A97E1A00h]  
+000000D3A97E16D6  ucomisd     xmm0,xmm15  
+000000D3A97E16DB  jne         000000D3A97E16E3  
+000000D3A97E16E1  jmp         000000D3A97E16A5  
+000000D3A97E16E3  ud2  
+000000D3A97E16E5  ud2  
+000000D3A97E16E7  ucomisd     xmm1,xmm1  
+000000D3A97E16EB  jp          000000D3A97E1709  
+000000D3A97E16F1  movsd       xmm15,mmword ptr [0D3A97E1A00h]  
+000000D3A97E16FA  ucomisd     xmm1,xmm15  
+000000D3A97E16FF  jne         000000D3A97E1707  
+000000D3A97E1705  jmp         000000D3A97E16B8  
+000000D3A97E1707  ud2  
+000000D3A97E1709  ud2  
+; end of func settry overflow process
+
+000000D3A97E170B  hlt  
+000000D3A97E170C  hlt  
+000000D3A97E170D  hlt  
+000000D3A97E170E  hlt  
+000000D3A97E170F  hlt  
+000000D3A97E1710  cmp         r10d,0Fh  
+000000D3A97E1714  je          000000D3A97E1720  
+000000D3A97E171A  ud2  
+000000D3A97E171C  nop         dword ptr [rax]  
+
+; func gettried
+000000D3A97E1720  push        r14  
+000000D3A97E1722  push        rbp  
+000000D3A97E1723  mov         rbp,rsp  
+000000D3A97E1726  mov         rax,qword ptr [r14+78h]  
+000000D3A97E172A  xorpd       xmm0,xmm0  
+000000D3A97E172E  cvtsi2sd    xmm0,rax  
+000000D3A97E1733  pop         rbp  
+000000D3A97E1734  pop         r14  
+000000D3A97E1736  ret  
+; end of func gettried
+
+000000D3A97E1737  hlt  
+000000D3A97E1738  hlt  
+000000D3A97E1739  hlt  
+000000D3A97E173A  hlt  
+000000D3A97E173B  hlt  
+000000D3A97E173C  hlt  
+000000D3A97E173D  hlt  
+000000D3A97E173E  hlt  
+000000D3A97E173F  hlt  
+000000D3A97E1740  cmp         r10d,9  
+000000D3A97E1744  je          000000D3A97E1750  
+000000D3A97E174A  ud2  
+000000D3A97E174C  nop         dword ptr [rax]  
+
+; func setright
+000000D3A97E1750  push        r14  
+000000D3A97E1752  push        rbp  
+000000D3A97E1753  mov         rbp,rsp  
+000000D3A97E1756  mov         dword ptr [r15+rcx+0Ch],edx  
+000000D3A97E175B  mov         eax,dword ptr [r15+rdx+8]  
+000000D3A97E1760  mov         dword ptr [r15+rax+0Ch],ecx  
+000000D3A97E1765  mov         eax,dword ptr [r15+rdx+8]  
+000000D3A97E176A  mov         dword ptr [r15+rcx+8],eax  
+000000D3A97E176F  mov         dword ptr [r15+rdx+8],ecx  
+000000D3A97E1774  pop         rbp  
+000000D3A97E1775  pop         r14  
+000000D3A97E1777  ret  
+; end of func setright
+
+000000D3A97E1778  hlt  
+000000D3A97E1779  hlt  
+000000D3A97E177A  hlt  
+000000D3A97E177B  hlt  
+000000D3A97E177C  hlt  
+000000D3A97E177D  hlt  
+000000D3A97E177E  hlt  
+000000D3A97E177F  hlt  
+
+; func setdown
+000000D3A97E1780  cmp         r10d,9  
+000000D3A97E1784  je          000000D3A97E1790  
+000000D3A97E178A  ud2  
+000000D3A97E178C  nop         dword ptr [rax]  
+000000D3A97E1790  push        r14  
+000000D3A97E1792  push        rbp  
+000000D3A97E1793  mov         rbp,rsp  
+000000D3A97E1796  mov         dword ptr [r15+rcx+4],edx  
+000000D3A97E179B  mov         eax,dword ptr [r15+rdx]  
+000000D3A97E179F  mov         dword ptr [r15+rax+4],ecx  
+000000D3A97E17A4  mov         eax,dword ptr [r15+rdx]  
+000000D3A97E17A8  mov         dword ptr [r15+rcx],eax  
+000000D3A97E17AC  mov         dword ptr [r15+rdx],ecx  
+000000D3A97E17B0  pop         rbp  
+000000D3A97E17B1  pop         r14  
+000000D3A97E17B3  ret  
+; end of func setdown
+
+000000D3A97E17B4  hlt  
+000000D3A97E17B5  hlt  
+000000D3A97E17B6  hlt  
+000000D3A97E17B7  hlt  
+000000D3A97E17B8  hlt  
+000000D3A97E17B9  hlt  
+000000D3A97E17BA  hlt  
+000000D3A97E17BB  hlt  
+000000D3A97E17BC  hlt
+000000D3A97E17BD  hlt
+000000D3A97E17BE  hlt
+000000D3A97E17BF  hlt
+000000D3A97E17C0  cmp         r10d, 5  
+000000D3A97E17C4  je          000000D3A97E17D0  
+000000D3A97E17CA  ud2  
+000000D3A97E17CC  nop         dword ptr [rax]  
+
+; func setroot
+000000D3A97E17D0  push        r14
+000000D3A97E17D2  push        rbp  
+000000D3A97E17D3  mov         rbp,rsp  
+000000D3A97E17D6  mov         dword ptr [r15+rcx],ecx  
+000000D3A97E17DA  mov         dword ptr [r15+rcx+4],ecx  
+000000D3A97E17DF  mov         dword ptr [r15+rcx+8],ecx  
+000000D3A97E17E4  mov         dword ptr [r15+rcx+0Ch],ecx  
+000000D3A97E17E9  mov         dword ptr [r15+rcx+10h],0  
+000000D3A97E17F2  mov         dword ptr [r15+rcx+14h],0  
+000000D3A97E17FB  mov         dword ptr [r15+rcx+18h],0  
+000000D3A97E1804  mov         dword ptr [r15+rcx+1Ch],0  
+000000D3A97E180D  mov         dword ptr [r15+rcx+20h],0  
+000000D3A97E1816  mov         dword ptr [r15+rcx+24h],0  
+000000D3A97E181F  pop         rbp  
+000000D3A97E1820  pop         r14  
+000000D3A97E1822  ret  
+; end of func setroot
+
+000000D3A97E1823  hlt  
+000000D3A97E1824  hlt  
+000000D3A97E1825  hlt  
+000000D3A97E1826  hlt  
+000000D3A97E1827  hlt  
+000000D3A97E1828  hlt  
+000000D3A97E1829  hlt  
+000000D3A97E182A  hlt  
+000000D3A97E182B  hlt  
+000000D3A97E182C  hlt  
+000000D3A97E182D  hlt  
+000000D3A97E182E  hlt  
+000000D3A97E182F  hlt  
+000000D3A97E1830  cmp         r10d,0Dh  
+000000D3A97E1834  je          000000D3A97E1840  
+000000D3A97E183A  ud2  
+000000D3A97E183C  nop         dword ptr [rax]  
+
+; func addrow
+000000D3A97E1840  push        r14  
+000000D3A97E1842  push        rbp  
+000000D3A97E1843  mov         rbp,rsp  
+000000D3A97E1846  sub         rsp,38h  
+000000D3A97E184A  cmp         qword ptr [r14+20h],rsp  
+000000D3A97E184E  jb          000000D3A97E1856  
+000000D3A97E1854  ud2  
+000000D3A97E1856  mov         dword ptr [rsp+34h],ecx  
+000000D3A97E185A  mov         dword ptr [rsp+30h],edx  
+000000D3A97E185E  mov         dword ptr [rsp+2Ch],r8d  
+000000D3A97E1863  mov         ecx,dword ptr [rsp+30h]  
+000000D3A97E1867  mov         edx,dword ptr [rsp+34h]  
+000000D3A97E186B  call        000000D3A97E1790  
+000000D3A97E1870  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E1874  mov         dword ptr [r15+rax+8],eax  
+000000D3A97E1879  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E187D  mov         dword ptr [r15+rax+0Ch],eax  
+000000D3A97E1882  mov         eax,dword ptr [rsp+2Ch]  
+000000D3A97E1886  mov         ecx,dword ptr [rsp+30h]  
+000000D3A97E188A  mov         dword ptr [r15+rcx+10h],eax  
+000000D3A97E188F  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E1893  mov         ecx,dword ptr [rsp+34h]  
+000000D3A97E1897  mov         dword ptr [r15+rax+14h],ecx  
+000000D3A97E189C  add         rsp,38h  
+000000D3A97E18A0  pop         rbp  
+000000D3A97E18A1  pop         r14  
+000000D3A97E18A3  ret  
+; end of func addrow
+
+000000D3A97E18A4  hlt  
+000000D3A97E18A5  hlt  
+000000D3A97E18A6  hlt  
+000000D3A97E18A7  hlt  
+000000D3A97E18A8  hlt  
+000000D3A97E18A9  hlt  
+000000D3A97E18AA  hlt  
+000000D3A97E18AB  hlt  
+000000D3A97E18AC  hlt  
+000000D3A97E18AD  hlt  
+000000D3A97E18AE  hlt  
+000000D3A97E18AF  hlt  
+000000D3A97E18B0  cmp         r10d,15h  
+000000D3A97E18B4  je          000000D3A97E18C0  
+000000D3A97E18BA  ud2  
+000000D3A97E18BC  nop         dword ptr [rax]  
+
+; func addcolumn
+000000D3A97E18C0  push        r14  
+000000D3A97E18C2  push        rbp  
+000000D3A97E18C3  mov         rbp,rsp  
+000000D3A97E18C6  sub         rsp,38h  
+000000D3A97E18CA  cmp         qword ptr [r14+20h],rsp  
+000000D3A97E18CE  jb          000000D3A97E18D6  
+000000D3A97E18D4  ud2  
+000000D3A97E18D6  mov         dword ptr [rsp+34h],ecx  
+000000D3A97E18DA  mov         dword ptr [rsp+30h],edx  
+000000D3A97E18DE  mov         dword ptr [rsp+2Ch],r8d  
+000000D3A97E18E3  mov         dword ptr [rsp+28h],r9d  
+000000D3A97E18E8  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E18EC  mov         dword ptr [r15+rax],eax  
+000000D3A97E18F0  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E18F4  mov         dword ptr [r15+rax+4],eax  
+000000D3A97E18F9  mov         ecx,dword ptr [rsp+30h]  
+000000D3A97E18FD  mov         edx,dword ptr [rsp+34h]  
+000000D3A97E1901  call        000000D3A97E1750  
+000000D3A97E1906  mov         ecx,dword ptr [rsp+30h]  
+000000D3A97E190A  mov         eax,dword ptr [rsp+34h]  
+000000D3A97E190E  mov         dword ptr [r15+rcx+10h],eax  
+000000D3A97E1913  mov         ecx,dword ptr [rsp+2Ch]  
+000000D3A97E1917  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E191B  mov         dword ptr [r15+rax+14h],ecx  
+000000D3A97E1920  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E1924  mov         dword ptr [r15+rax+18h],0  
+000000D3A97E192D  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E1931  mov         dword ptr [r15+rax+1Ch],0  
+000000D3A97E193A  mov         eax,dword ptr [rsp+28h]  
+000000D3A97E193E  mov         ecx,dword ptr [rsp+30h]  
+000000D3A97E1942  mov         dword ptr [r15+rcx+20h],eax  
+000000D3A97E1947  mov         eax,dword ptr [rsp+70h]  
+000000D3A97E194B  mov         ecx,dword ptr [rsp+30h]  
+000000D3A97E194F  mov         dword ptr [r15+rcx+24h],eax  
+000000D3A97E1954  add         rsp,38h  
+000000D3A97E1958  pop         rbp  
+000000D3A97E1959  pop         r14  
+000000D3A97E195B  ret  
+; end of func addcolumn
+
+000000D3A97E195C  hlt  
+000000D3A97E195D  hlt  
+000000D3A97E195E  hlt  
+000000D3A97E195F  hlt  
+000000D3A97E1960  cmp         r10d,0Dh  
+000000D3A97E1964  je          000000D3A97E1970  
+000000D3A97E196A  ud2  
+000000D3A97E196C  nop         dword ptr [rax]  
+
+; func addcell
+000000D3A97E1970  push        r14  
+000000D3A97E1972  push        rbp  
+000000D3A97E1973  mov         rbp,rsp  
+000000D3A97E1976  sub         rsp,38h  
+000000D3A97E197A  cmp         qword ptr [r14+20h],rsp  
+000000D3A97E197E  jb          000000D3A97E1986  
+000000D3A97E1984  ud2  
+000000D3A97E1986  mov         dword ptr [rsp+34h],ecx  
+000000D3A97E198A  mov         dword ptr [rsp+30h],edx  
+000000D3A97E198E  mov         dword ptr [rsp+2Ch],r8d  
+000000D3A97E1993  mov         edx,dword ptr [rsp+2Ch]  
+000000D3A97E1997  call        000000D3A97E1790  
+000000D3A97E199C  mov         edx,dword ptr [rsp+30h]  
+000000D3A97E19A0  mov         ecx,dword ptr [rsp+34h]  
+000000D3A97E19A4  call        000000D3A97E1750  
+000000D3A97E19A9  mov         eax,dword ptr [rsp+30h]  
+000000D3A97E19AD  mov         ecx,dword ptr [r15+rax+8]  
+000000D3A97E19B2  mov         edx,dword ptr [r15+rax+0Ch]  
+000000D3A97E19B7  mov         dword ptr [r15+rcx+0Ch],edx  
+000000D3A97E19BC  mov         ecx,dword ptr [r15+rax+0Ch]  
+000000D3A97E19C1  mov         edx,dword ptr [r15+rax+8]  
+000000D3A97E19C6  mov         dword ptr [r15+rcx+8],edx  
+000000D3A97E19CB  mov         ecx,dword ptr [rsp+34h]  
+000000D3A97E19CF  mov         dword ptr [r15+rcx+10h],eax  
+000000D3A97E19D4  mov         eax,dword ptr [rsp+2Ch]  
+000000D3A97E19D8  mov         dword ptr [r15+rcx+14h],eax  
+000000D3A97E19DD  mov         eax,dword ptr [rsp+2Ch]  
+000000D3A97E19E1  mov         eax,dword ptr [r15+rax+18h]  
+000000D3A97E19E6  add         eax,1  
+000000D3A97E19E9  mov         ecx,dword ptr [rsp+2Ch]  
+000000D3A97E19ED  mov         dword ptr [r15+rcx+18h],eax  
+000000D3A97E19F2  add         rsp,38h  
+000000D3A97E19F6  pop         rbp  
+000000D3A97E19F7  pop         r14  
+000000D3A97E19F9  ret  
+; end of func addcell
+
+000000D3A97E19FA  hlt  
+000000D3A97E19FB  hlt  
+000000D3A97E19FC  hlt  
+000000D3A97E19FD  hlt  
+000000D3A97E19FE  hlt  
+000000D3A97E19FF  hlt  
+
+; encode -2**63 as f64
+000000D3A97E1A00  add         byte ptr [rax],al  
+000000D3A97E1A02  add         byte ptr [rax],al  
+000000D3A97E1A04  add         byte ptr [rax],al  
+000000D3A97E1A06  loopne      000000D3A97E19CB  
+
+000000D3A97E1A08  ud2  
+000000D3A97E1A0A  hlt  
+000000D3A97E1A0B  hlt  
+000000D3A97E1A0C  hlt  
+000000D3A97E1A0D  hlt  
+000000D3A97E1A0E  hlt  
+000000D3A97E1A0F  hlt  
