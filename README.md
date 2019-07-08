@@ -86,7 +86,7 @@ op:
   currentmemory
   growmemory
   (i32const | iconst) <int>
-    ;; TODO: i64const
+  (i64const | lconst) <int>
   (f32const | fconst) <float>
   (f64const | dconst) <float>
   (i32 | i64 | I | L)(<intcmp> | <intarith>)
@@ -130,7 +130,7 @@ floatarith: abs | neg | ceil | floor | trunc | nearest | sqrt
 
 Instruction names are the same as in WebAssembly text format, with dots, underscopes and slashed removed. For example, `i32.shr_s` is `i32shrs` in Alnumwasm, and `i32.trunc_s/f32` is `i32truncsf32` in Alnumwasm.
 
-Type of arithmetic and comparison ops can be abbreviated as a single letter. For example, `i32shrs` is the same as `ishrs`.
+Type of arithmetic and comparison ops can be abbreviated to a single letter. For example, `i32shrs` is the same as `ishrs`.
 
 Conversion ops can be written as `<from type>2<to type>`. Note that conversion from and to integer needs to specify the signedness.
 
