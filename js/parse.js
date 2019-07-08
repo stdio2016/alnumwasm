@@ -45,6 +45,20 @@ AlnumWasmParser.writeInt = function (n, code) {
   code.push(n & 0x7F);
 };
 
+AlnumWasmParser.writeLongInt = function (hi, lo, code) {
+  console.log(hi.toString(2), lo.toString(2));
+  hi = hi | 0;
+  lo = lo | 0;
+  while (!(hi == 0 && lo < 64 && lo >= 0 || hi == -1 && lo >= -64 && lo < 0)) {
+    console.log((128 | lo & 127).toString(2));
+    code.push(lo & 0x7F | 0x80);
+    lo = (hi&0x7F)<<25 | lo>>>7;
+    hi >>= 7;
+  }
+  console.log((lo & 127).toString(2));
+  code.push(lo & 0x7F);
+};
+
 AlnumWasmParser.writeUint = function (n, code) {
   while (n >= 128) {
     code.push(n & 0x7F | 0x80);
@@ -163,7 +177,8 @@ AlnumWasmParser.prototype.parseExpr = function () {
       this.parseInt();
     }
     else if (op === OpCodes.I64CONST) {
-      ;
+      var n = AlnumWasmParser.parseLongInt(this.lexer.next());
+      AlnumWasmParser.writeLongInt(n[0], n[1], this.code);
     }
     else if (op === OpCodes.F32CONST || op === OpCodes.F64CONST) {
       this.parseFloat(op - OpCodes.F32CONST);

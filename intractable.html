@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+#tblGraph td {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
+  padding: 0;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<script src="js/tokenizer.js"></script>
+<script src="js/opcodes.js"></script>
+<script src="js/parse.js"></script>
+<script src="js/compile.js"></script>
+<p>Intractable problem</p>
+<p>
+n = <input id=txtN type=number max=17 min=3 oninput=changeTable() value=3><br>
+<table id='tblGraph' onclick='toggleCell(event.target)'>
+</table>
+</p>
+<p>
+<button onclick='testHamPath()'>Hamiltonian cycle count</button>
+</p>
+<p>
+<span><em>Warning! It can take long time to finish</em></span>
+</p>
+<p id=lblAns></p>
+<script src='test/intractable.js'></script>
+</body>
+</html>
