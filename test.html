@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="js/tokenizer.js"></script>
+<script src="js/opcodes.js"></script>
+<script src="js/parse.js"></script>
+<script src="js/compile.js"></script>
+<script src='test/dlx.js'></script>
+<title>Test assembler</title>
+</head>
+<body>
+<h1>Test assembler</h1>
+<p>
+<textarea cols=40 rows=8 id=codeIn>from env import mem as memory 0
+
+func hello export Hello
+param a as i32 and b as i32
+result i32
+code
+  get a get b ior if
+    get a get b iadd return
+  end
+  iconst 123
+end</textarea><br>
+<input type=button value=Compile onclick="compile()">
+<div>
+Test run<br>
+Function: <select id=selFunc disabled oninput="chooseFunction()"><option value=xx selected>No function</option></select><br>
+Arguments:<br>
+<div id=divArgs>
+</div>
+<input type=button value=Run onclick='run()'>
+</div>
+<p>
+Output message:<br>
+<textarea id=msgOut cols=40 rows=4></textarea>
+<script>
+var env = {};
+var module;
+var parser;
+function compile() {
+  parser = new AlnumWasmCompiler(codeIn.value + ' ');
+  try {
+    var buf = parser.compile();
+    WebAssembly.compile(buf).then(function (asm) {
+      env.mem = new WebAssembly.Memory({initial: 1});
+      return WebAssembly.instantiate(asm, {env: env});
+    }).then(function (inst) {
+      module = inst;
+      selFunc.options.length = 0;
+      selFunc.disabled = false;
+      for (var name in inst.exports) {
+        if (typeof inst.exports[name] == "function")
+          selFunc.add(new Option(name, name));
+      }
+      chooseFunction();
+      msgOut.value = 'success';
+    }).catch(function (x) {
+      msgOut.value = x.message;
+    });
+  }
+  catch (x) {
+    msgOut.value = x.message;
+    var t = x.message.match(/at line (\d+) col (\d+)/);
+    if (t) {
+      var line = t[1], col = t[2];
+      var what = codeIn.value.split('\n')[line-1];
+      var at = Array(col-1).join(' ') + '^';
+      msgOut.value += '\n' + what + '\n' + at
+    }
+  }
+}
+function chooseFunction() {
+  var name = selFunc.value;
+  var exports = parser.parser.exports;
+  var n = exports.length, i;
+  for (i = 0; i < n; i++) {
+    if (exports[i][0] == name) break;
+  }
+  name = exports[i][2];
+  if (i == n) return;
+  var funs = parser.functions;
+  n = funs.length;
+  for (i = 0; i < n; i++) {
+    if (funs[i][0] == name) break;
+  }
+  if (i == n) return;
+  divArgs.innerHTML = "";
+  var sig = funs[i][1];
+  if (sig[0] == 'param') {
+    for (var i = 0; i < sig[1].length; i++) {
+      var argname = sig[1][i][0];
+      var t1 = new Text(argname);
+      var t2 = document.createElement('input');
+      t2.id = 'arg' + i;
+      var t3 = document.createElement('div');
+      t3.appendChild(t1);
+      t3.appendChild(t2);
+      divArgs.appendChild(t3);
+    }
+  }
+}
+
+function run() {
+  var name = selFunc.value;
+  var func = module.exports[name];
+  var args = [];
+  for (var i = 0; i < func.length; i++) {
+    var a = document.getElementById('arg' + i).value;
+    args.push(a);
+  }
+  var t = +new Date();
+  try {
+    var ret = func.apply(null, args);
+    var t2 = +new Date();
+    if (ret == null) {
+      msgOut.value = 'success (time: ' + (t2-t) + 'ms)';
+    }
+    else {
+      msgOut.value = ret + ' (time: ' + (t2-t) + 'ms)';
+    }
+  }
+  catch (x) {
+    msgOut.value = x.message;
+  }
+}
+</script>
+</body>
+</html>
