@@ -1,5 +1,5 @@
 memory 0 export solution min 1
-global cnt export cnt as mut f64
+global cnt as mut f64
 
 ; solves knight tour problem
 func knight export knight param x as i32 and y as i32 and lv as i32 result i32
@@ -39,4 +39,9 @@ code
     iconst 0 return
   end
   iconst 1
+end
+
+func cnt export getcnt result f64
+code
+  getglobal cnt
 end
