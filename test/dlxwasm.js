@@ -47,17 +47,17 @@ function testDlx(lv) {
   }
   var rowaddr = (1 + n*2 + (2*n-1)*2)*40;
   for (var i = 0; i < n*n; i++) {
-    dlxModule.exports.addrow(0, rowaddr + i * 24, i);
+    //dlxModule.exports.addrow(0, rowaddr + i * 24, i);
   }
   var celladdr = rowaddr + n*n*24;
   for (var i = 0; i < n; i++) {
     for (var j = 0; j < n; j++) {
-      var row = rowaddr + (i*n+j) * 24;
+      //var row = rowaddr + (i*n+j) * 24;
       var addr = celladdr + (i*n+j) * 96;
-      dlxModule.exports.addcell(addr + 0, row, (i+1)*40);
-      dlxModule.exports.addcell(addr + 24, row, (n+j+1)*40);
-      dlxModule.exports.addcell(addr + 48, row, (n*2+i+j+1)*40);
-      dlxModule.exports.addcell(addr + 72, row, (n*4-1+(i-j+n-1)+1)*40);
+      dlxModule.exports.addfirstcell(addr, (i+1)*40, i*100+j);
+      dlxModule.exports.addcell(addr + 24, addr, (n+j+1)*40, i*100+j);
+      dlxModule.exports.addcell(addr + 48, addr + 24, (n*2+i+j+1)*40, i*100+j);
+      dlxModule.exports.addcell(addr + 72, addr + 48, (n*4-1+(i-j+n-1)+1)*40, i*100+j);
     }
   }
   var stack = celladdr + n*n*96;

@@ -292,13 +292,14 @@ code
   get addr iconst 0 istore align 4 off 36 ; max
 end
 
-func addrow export addrow param root as i32 and addr as i32 and id as i32
+func addfirstcell export addfirstcell param addr as i32 and col as i32 and id as i32
 code
-  get addr get root call setdown ; up, down
+  get addr get col call setdown ; up, down
   get addr get addr istore align 4 off 8 ; left
   get addr get addr istore align 4 off 12 ; right
   get addr get id istore align 4 off 16 ; row
-  get addr get root istore align 4 off 20 ; col
+  get addr get col istore align 4 off 20 ; col
+  get col get col iload align 4 off 24 iconst 1 iadd istore align 4 off 24
 end
 
 func addcolumn export addcolumn param root as i32 and addr as i32 and id as i32
@@ -306,7 +307,12 @@ func addcolumn export addcolumn param root as i32 and addr as i32 and id as i32
 code
   get addr get addr istore align 4 off 0 ; up
   get addr get addr istore align 4 off 4 ; down
-  get addr get root call setright ; left, right
+  get min iconst 0 igts if
+    get addr get root call setright ; left, right
+  else
+    get addr get addr istore align 4 off 8 ; left
+    get addr get addr istore align 4 off 12 ; right
+  end
   get addr get root istore align 4 off 16 ; row
   get addr get id istore align 4 off 20 ; col
   
@@ -316,13 +322,11 @@ code
   get addr get max istore align 4 off 36 ; max
 end
 
-func addcell export addcell param addr as i32 and row as i32 and col as i32
+func addcell export addcell param addr as i32 and prevcell as i32 and col as i32 and rowid as i32
 code
   get addr get col call setdown ; up, down
-  get addr get row call setright ; left, right
-  get row iload align 4 off 8 get row iload align 4 off 12 istore align 4 off 12
-  get row iload align 4 off 12 get row iload align 4 off 8 istore align 4 off 8
-  get addr get row istore align 4 off 16 ; row
+  get addr get prevcell call setright ; left, right
+  get addr get rowid istore align 4 off 16 ; row
   get addr get col istore align 4 off 20 ; col
   get col get col iload align 4 off 24 iconst 1 iadd istore align 4 off 24
 end

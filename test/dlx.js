@@ -44,7 +44,6 @@ function Matrix() {
   this.root = new MatrixColumn(-1);
   this.rows = [];
   this.cols = [];
-  this.activecols = 0;
   this.choice = [];
   this.solution = [];
   this.tried = 0;
@@ -55,7 +54,6 @@ Matrix.prototype.addColumn = function (min, max) {
   this.cols.push(col);
   if (min > 0) {
     col.setR(this.root);
-    this.relinkColumn(col);
   }
   return col.id;
 };
@@ -92,15 +90,8 @@ Matrix.prototype.unlinkRow = function (n, includeN) {
 };
 
 Matrix.prototype.unlinkColumn = function (n) {
-  //n.l.r = n.r;
-  //n.r.l = n.l;
-  this.activecols -= 1;
-  var i = this.activecols;
-  var a = this.cols[i];
-  this.cols[n.id] = a;
-  this.cols[i] = n;
-  a.id = n.id;
-  n.id = i;
+  n.l.r = n.r;
+  n.r.l = n.l;
 };
 
 Matrix.prototype.relinkRow = function (n, includeN) {
@@ -115,15 +106,8 @@ Matrix.prototype.relinkRow = function (n, includeN) {
 };
 
 Matrix.prototype.relinkColumn = function (n) {
-  //n.l.r = n;
-  //n.r.l = n;
-  var i = this.activecols;
-  var a = this.cols[i];
-  this.cols[n.id] = a;
-  this.cols[i] = n;
-  a.id = n.id;
-  n.id = i;
-  this.activecols = i+1;
+  n.l.r = n;
+  n.r.l = n;
 };
 
 Matrix.prototype.dlx = function () {
@@ -138,9 +122,7 @@ Matrix.prototype.dlxRunner = function (lv) {
   this.tried++;
   var c = this.root;
   var minfit = -1;
-  for (var i = 0; i < this.activecols; i++) {
-    var col = this.cols[i];
-  //for (var col = c.r; col !== this.root; col = col.r) {
+  for (var col = c.r; col !== this.root; col = col.r) {
     // satisfied
     if (col.value <= col.max  && col.value >= col.min) continue;
     // unusable
@@ -169,8 +151,8 @@ Matrix.prototype.dlxRunner = function (lv) {
     do {
       var c2 = n2.col;
       c2.value += 1;
-      if (c2.value === c2.min) this.unlinkColumn(c2);
       if (c2.value === c2.max) {
+        this.unlinkColumn(c2);
         var n3 = c2.first.d;
         while (n3 !== c2.first) {
           this.unlinkRow(n3, false);
@@ -193,8 +175,8 @@ Matrix.prototype.dlxRunner = function (lv) {
           this.relinkRow(n3, false);
           n3 = n3.u;
         }
+        this.relinkColumn(c2);
       }
-      if (c2.value === c2.min) this.relinkColumn(c2);
       c2.value -= 1;
     } while (n2 !== n) ;
     this.unlinkRow(n, true);
